@@ -3,116 +3,129 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" />
-<title>Profi Family Kalendář 2026</title>
+<title>Family Calendar Sky Blue - High Contrast</title>
 <style>
 :root {
-  --bg: #0a0f1a;
-  --panel: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.1);
+  --app-bg: #1A1819; /* Trochu tmavší pro lepší kontrast */
+  --panel-bg: rgba(50, 46, 47, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.15);
+  --accent-blue: #7CD1E9;
+  --accent-cyan: #06B6D4;
+  --text-main: #FFFFFF;
+  --text-muted: #A1A1AA;
+  --text-dim: #999; /* Zlepšená viditelnost v mini kalendáři */
   --gold: #d99a3f;
-  --text: #ffffff;
-  --muted: #9aa6b6;
-  --clr-bday: #f59e0b;
-  --clr-nameday: #10b981;
-  --clr-anniv: #ec4899;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
-  margin:0; min-height: 100vh;
-  background: radial-gradient(circle at top right, #1e293b, #0a0f1a);
-  color: var(--text); padding: 10px;
+  margin: 0; min-height: 100vh;
+  background-color: var(--app-bg);
+  color: var(--text-main);
+  padding: 10px;
+  -webkit-font-smoothing: antialiased;
 }
 
-.wrap { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.wrap { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
 
 .glass {
-  background: var(--panel); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--border); border-radius: 18px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-highlight);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
-.header { padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-.brand { text-align: center; }
-.brand .title { font-weight: 800; font-size: 20px; color: var(--gold); letter-spacing: 1px; }
+/* Header */
+.header { padding: 20px; text-align: center; }
+.brand-title { font-weight: 800; font-size: 22px; letter-spacing: 1px; color: var(--accent-blue); margin-bottom: 20px; }
 
-.controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.controls { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
 .btn, .select {
-  background: rgba(255,255,255,0.08); border: 1px solid var(--border);
-  color: #fff; padding: 12px; border-radius: 12px; cursor: pointer; font-size: 15px;
+  background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border);
+  color: #fff; padding: 12px 15px; border-radius: 14px; cursor: pointer; font-size: 14px;
 }
-.btn-gold {
-  background: var(--gold); color: #000; font-weight: bold; border: none;
-  padding: 12px 18px; border-radius: 12px; cursor: pointer; font-size: 15px;
+.btn-accent { background: var(--accent-blue); border: none; color: #1A1819; font-weight: 800; }
+
+/* Filter Tags */
+.filter-bar { padding: 15px 20px; border-top: 1px solid var(--glass-border); }
+.tag-btn { 
+  background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); 
+  color: var(--text-muted); padding: 8px 14px; border-radius: 12px; font-size: 13px; cursor: pointer; margin: 4px;
 }
 
-/* Styl pro přepínač Zobrazení */
-.view-toggle {
-    display: flex;
-    background: rgba(0,0,0,0.3);
-    padding: 4px;
-    border-radius: 14px;
-    margin: 0 auto;
-    width: fit-content;
-}
-.toggle-btn {
-    padding: 8px 16px;
-    border-radius: 10px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-.toggle-btn.active {
-    background: var(--gold);
-    color: #000;
-}
+/* Main Layout */
+.main-layout { display: grid; grid-template-columns: 1fr 320px; gap: 15px; }
+@media(max-width: 950px) { .main-layout { grid-template-columns: 1fr; } }
 
-.month-view, .year-view { display: none; width: 100%; }
-.active-view { display: block; }
-
-.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 15px;}
-.weekday { font-size: 10px; color: var(--gold); text-align: center; font-weight: bold; padding: 5px 0; }
+/* Calendar Grid */
+.calendar-box { padding: 15px; }
+.month-label { font-size: 26px; font-weight: 800; margin-bottom: 20px; text-align: center; color: #fff; }
+.grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.weekday { font-size: 12px; color: var(--accent-blue); text-align: center; font-weight: 800; padding-bottom: 12px; }
 
 .day {
-  min-height: 95px; padding: 6px; border-radius: 12px;
-  background: rgba(0,0,0,0.25); border: 1px solid var(--border);
-  cursor: pointer; display: flex; flex-direction: column; gap: 3px;
+  aspect-ratio: 1/1.2; padding: 8px; border-radius: 18px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+  cursor: pointer; position: relative; transition: 0.2s;
+  display: flex; flex-direction: column; align-items: center;
 }
-.day.today { border-color: var(--gold); background: rgba(217, 154, 63, 0.1); }
-.day-num { font-weight: bold; font-size: 14px; }
-.nameday-label { font-size: 9px; color: var(--muted); font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.day.today { border: 2px solid var(--accent-blue); background: rgba(124, 209, 233, 0.15); }
+.day.today .day-num { background: var(--accent-blue); color: #1A1819; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; }
+.day.weekend { color: var(--gold); }
 
-.ev-tag { font-size: 9px; padding: 3px 5px; border-radius: 5px; color: #000; font-weight: bold; margin-bottom: 2px; }
+.day-num { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
+.nameday-mini { font-size: 10px; color: var(--text-muted); text-align: center; white-space: nowrap; overflow: hidden; width: 100%; }
+.dots { display: flex; gap: 3px; margin-top: auto; padding-bottom: 5px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; }
 
-/* Celoroční náhled - mřížka měsíců */
-.full-year-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 15px;
-    padding: 15px;
+/* SIDEBAR - MINI KALENDÁŘ - OPRAVA VIDITELNOSTI */
+.mini-year { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; }
+@media(max-width: 400px) { .mini-year { grid-template-columns: 1fr; } }
+
+.mini-mo { 
+  padding: 12px; border-radius: 20px; background: rgba(0,0,0,0.3); 
+  border: 1px solid var(--glass-border); cursor: pointer; transition: 0.2s;
 }
-.mini-month {
-    background: rgba(0,0,0,0.2);
-    padding: 10px;
-    border-radius: 15px;
-    border: 1px solid var(--border);
+.mini-mo:hover { background: rgba(255,255,255,0.05); }
+.mini-mo.active { border-color: var(--accent-blue); background: rgba(124, 209, 233, 0.1); }
+
+.mini-title { 
+  font-size: 13px; font-weight: 800; text-align: center; 
+  margin-bottom: 8px; color: #fff; /* Čistě bílá pro čitelnost */
 }
-.mini-days-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    font-size: 10px;
-    text-align: center;
+.mini-grid { 
+  display: grid; grid-template-columns: repeat(7, 1fr); 
+  gap: 2px; font-size: 9px; text-align: center; 
+  color: var(--text-dim); /* Světlejší šedá pro dny */
+}
+.mini-day-ev { 
+  color: var(--accent-blue); 
+  font-weight: 900; 
+  text-shadow: 0 0 5px rgba(124, 209, 233, 0.5); 
 }
 
+/* Modal UI */
 .modal-bg {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-  display: none; align-items: center; justify-content: center; z-index: 1000;
+  position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px);
+  display: none; align-items: center; justify-content: center; z-index: 1000; padding: 15px;
 }
 .modal-bg.show { display: flex; }
-.modal { background: #161b26; padding: 25px; border-radius: 24px; width: 92%; max-width: 400px; border: 1px solid var(--gold); }
+.modal { background: #2c2829; padding: 25px; border-radius: 30px; width: 100%; max-width: 400px; border: 1px solid var(--accent-blue); }
+.modal input, .modal select, .modal textarea {
+  width: 100%; margin-bottom: 12px; padding: 15px; border-radius: 16px;
+  background: #111; border: 1px solid var(--glass-border); color: #fff; font-size: 16px; box-sizing: border-box;
+}
+.btn-save { background: var(--accent-blue); color: #1A1819; border: none; width: 100%; padding: 16px; border-radius: 16px; font-weight: 800; cursor: pointer; }
+
+.ev-row { 
+    background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); 
+    padding: 14px; border-radius: 16px; margin-bottom: 10px; 
+    display: flex; justify-content: space-between; align-items: center;
+}
 </style>
 </head>
 <body>
@@ -120,165 +133,154 @@ body {
 <div class="wrap">
   <header class="glass">
     <div class="header">
-      <div class="brand"><div class="title">RODINNÝ KALENDÁŘ</div></div>
-      
-      <div class="view-toggle">
-        <button class="toggle-btn active" onclick="switchView('month')">Měsíc</button>
-        <button class="toggle-btn" onclick="switchView('year')">Celý rok</button>
+      <div class="brand-title">RODINNÝ KALENDÁŘ</div>
+      <div class="controls">
+        <button class="btn" onclick="moveMonth(-1)">❮</button>
+        <select id="moSel" class="select"></select>
+        <select id="yrSel" class="select"></select>
+        <button class="btn" onclick="moveMonth(1)">❯</button>
+        <button class="btn btn-accent" onclick="goToday()">DNES</button>
       </div>
-
-      <div class="controls" id="monthControls">
-        <button class="btn" onclick="changeMonth(-1)">◀</button>
-        <select id="monthSelect" class="select" onchange="setMonth(this.value)"></select>
-        <select id="yearSelect" class="select" onchange="setYear(this.value)"></select>
-        <button class="btn" onclick="changeMonth(1)">▶</button>
-      </div>
+    </div>
+    <div class="filter-bar">
+      <div id="tags" style="display: flex; flex-wrap: wrap; justify-content: center;"></div>
     </div>
   </header>
 
-  <main class="glass" style="min-height: 60vh;">
-    <div id="monthView" class="month-view active-view" style="padding: 15px;">
-        <h2 id="monthLabel" style="text-align:center; color: var(--gold); margin-top:0;"></h2>
-        <div class="month-grid" id="mainGrid"></div>
-    </div>
+  <main class="main-layout">
+    <section class="glass calendar-box">
+      <div class="month-label" id="moLab">—</div>
+      <div class="grid" id="mainGrid"></div>
+    </section>
 
-    <div id="yearView" class="year-view">
-        <div class="full-year-grid" id="fullYearGrid"></div>
-    </div>
+    <aside class="glass sidebar">
+      <div style="font-size: 12px; font-weight: 800; color: var(--accent-blue); text-transform: uppercase; padding: 20px 0 0 20px; letter-spacing: 1px;">Náhled roku</div>
+      <div class="mini-year" id="yearGrid"></div>
+    </aside>
   </main>
 </div>
 
 <div class="modal-bg" id="modalBg">
-    <div class="modal">
-        <h3 id="modalTitle" style="color:var(--gold); margin-top:0;">Upravit den</h3>
-        <div id="eventList"></div>
-        <div id="editForm" style="margin-top:15px">
-            <input type="text" id="addName" style="width:100%; padding:10px; margin-bottom:10px" placeholder="Jméno...">
-            <select id="addType" style="width:100%; padding:10px; margin-bottom:10px">
-                <option value="bday">🎂 Narozeniny</option>
-                <option value="anniv">💍 Událost</option>
-            </select>
-            <button class="btn-gold" style="width:100%" onclick="saveEvent()">ULOŽIT</button>
-        </div>
-        <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:15px;">Zavřít</button>
+  <div class="modal">
+    <h3 id="modalTitle" style="margin-top:0; color:var(--accent-blue); font-size: 22px;">Detail dne</h3>
+    <div id="evList" style="margin-bottom:20px; max-height: 200px; overflow-y: auto;"></div>
+    <div style="border-top: 1px solid var(--glass-border); padding-top:20px;">
+      <input type="text" id="addN" placeholder="Jméno...">
+      <select id="addT">
+        <option value="bday">🎂 Narozeniny</option>
+        <option value="nameday">🌸 Svátek</option>
+        <option value="anniv">💍 Výročí</option>
+      </select>
+      <input type="number" id="addY" placeholder="Rok narození">
+      <textarea id="addNote" placeholder="Poznámka..." rows="2"></textarea>
+      <button class="btn-save" onclick="save()">ULOŽIT</button>
     </div>
+    <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--text-muted); margin-top:20px; cursor:pointer;">Zavřít</button>
+  </div>
 </div>
 
 <script>
-// Pomocná data a stav
-const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"];
-let curYear = 2026, curMonth = new Date().getMonth();
-let events = JSON.parse(localStorage.getItem('family_cal_v8') || '{}');
-let editDateKey = null;
+// (Svátek data a základní logika zůstávají stejné jako v předchozí verzi...)
+const czNamedays = {"0-1":"Nový rok","0-2":"Karina","0-3":"Radmila","0-4":"Diana","0-5":"Dalimil","0-6":"Tři králové","0-7":"Vilma","0-8":"Čestmír","0-9":"Vladan","0-10":"Břetislav","0-11":"Bohdana","0-12":"Pravoslav","0-13":"Edita","0-14":"Radovan","0-15":"Alice","0-16":"Ctirad","0-17":"Drahoslav","0-18":"Vladislav","0-19":"Doubravka","0-20":"Ilona","0-21":"Běla","0-22":"Slavomír","0-23":"Zdeněk","0-24":"Milena","0-25":"Miloš","0-26":"Zora","0-27":"Ingrid","0-28":"Otýlie","0-29":"Zdislava","0-30":"Robin","0-31":"Marika","1-1":"Hynek","1-2":"Nela","1-3":"Blažej","1-4":"Jarmila","1-5":"Dobromila","1-6":"Vanda","1-7":"Veronika","1-8":"Milada","1-9":"Apolena","1-10":"Mojmír","1-11":"Božena","1-12":"Slavěna","1-13":"Věnceslav","1-14":"Valentýn","1-15":"Jiřina","1-16":"Ljuba","1-17":"Miloslava","1-18":"Gizela","1-19":"Patrik","1-20":"Oldřich","1-21":"Lenka","1-22":"Petr","1-23":"Svatopluk","1-24":"Matěj","1-25":"Liliana","1-26":"Dorota","1-27":"Alexandr","1-28":"Lumír","1-29":"Horymír","2-1":"Bedřich","2-2":"Anežka","2-3":"Kamil","2-4":"Stela","2-5":"Kazimír","2-6":"Miroslav","2-7":"Tomáš","2-8":"Gabriela","2-9":"Františka","2-10":"Viktorie","2-11":"Anděla","2-12":"Řehoř","2-13":"Růžena","2-14":"Rút","2-15":"Ida","2-16":"Elena","2-17":"Vlastimil","2-18":"Eduard","2-19":"Josef","2-20":"Světlana","2-21":"Radek","2-22":"Leona","2-23":"Ivona","2-24":"Gabriel","2-25":"Marián","2-26":"Emanuel","2-27":"Dita","2-28":"Soňa","2-29":"Taťána","2-30":"Arnošt","2-31":"Kvido","3-1":"Hugo","3-2":"Erika","3-3":"Richard","3-4":"Ivana","3-5":"Miroslava","3-6":"Vendula","3-7":"Heřman","3-8":"Ema","3-9":"Dušan","3-10":"Darja","3-11":"Izabela","3-12":"Julius","3-13":"Aleš","3-14":"Vincenc","3-15":"Anastázie","3-16":"Irena","3-17":"Rudolf","3-18":"Valérie","3-19":"Rostislav","3-20":"Marcela","3-21":"Alexandra","3-22":"Evženie","3-23":"Vojtěch","3-24":"Jiří","3-25":"Marek","3-26":"Ota","3-27":"Jaroslav","3-28":"Vlastislav","3-29":"Robert","3-30":"Blahoslav","4-1":"Svátek práce","4-2":"Zikmund","4-3":"Alexej","4-4":"Květoslav","4-5":"Klaudie","4-6":"Radoslav","4-7":"Stanislav","4-8":"Den vítězství","4-9":"Ctibor","4-10":"Blažena","4-11":"Svatava","4-12":"Pankrác","4-13":"Servác","4-14":"Bonifác","4-15":"Žofie","4-16":"Přemysl","4-17":"Aneta","4-18":"Nataša","4-19":"Ivo","4-20":"Zbyšek","4-21":"Monika","4-22":"Emil","4-23":"Vladimír","4-24":"Jana","4-25":"Viola","4-26":"Filip","4-27":"Valdemar","4-28":"Vilém","4-29":"Maxmilián","4-30":"Ferdinand","5-1":"Laura","5-2":"Jarmil","5-3":"Tamara","5-4":"Dalibor","5-5":"Dobroslav","5-6":"Norbert","5-7":"Iveta","5-8":"Medard","5-9":"Stanislava","5-10":"Gita","5-11":"Bruno","5-12":"Antonie","5-13":"Antonín","5-14":"Roland","5-15":"Vít","5-16":"Zbyněk","5-17":"Adolf","5-18":"Milan","5-19":"Leoš","5-20":"Květa","5-21":"Alois","5-22":"Pavla","5-23":"Zdeňka","5-24":"Jan","5-25":"Ivan","5-26":"Adriana","5-27":"Ladislav","5-28":"Lubomír","5-29":"Petr a Pavel","5-30":"Šárka","6-1":"Jaroslava","6-2":"Patricie","6-3":"Radomír","6-4":"Prokop","6-5":"Cyril a Metoděj","6-6":"Mistr Jan Hus","6-7":"Bohuslava","6-8":"Nora","6-9":"Drahoslava","6-10":"Libuše","6-11":"Olga","6-12":"Bořek","6-13":"Markéta","6-14":"Karolína","6-15":"Jindřich","6-16":"Luboš","6-17":"Martina","6-18":"Drahomíra","6-19":"Čeněk","6-20":"Ilja","6-21":"Vítězslav","6-22":"Magdaléna","6-23":"Libor","6-24":"Kristýna","6-25":"Jakub","6-26":"Anna","6-27":"Alena","6-28":"Viktor","6-29":"Marta","6-30":"Bořivoj","7-1":"Oskar","7-2":"Gustav","7-3":"Miluše","7-4":"Dominik","7-5":"Kristián","7-6":"Oldřiška","7-7":"Lada","7-8":"Soběslav","7-9":"Roman","7-10":"Vavřinec","7-11":"Zuzana","7-12":"Klára","7-13":"Alena","7-14":"Alan","7-15":"Hana","7-16":"Jáchym","7-17":"Petra","7-18":"Helena","7-19":"Ludvík","7-20":"Bernard","7-21":"Johana","7-22":"Bohuslav","7-23":"Sandra","7-24":"Bartoloměj","7-25":"Radim","7-26":"Luděk","7-27":"Otakar","7-28":"Augustýn","7-29":"Evelína","7-30":"Vladěna","7-31":"Pavlína","8-1":"Linda","8-2":"Adéla","8-3":"Bronislav","8-4":"Jindřiška","8-5":"Boris","8-6":"Boleslav","8-7":"Regína","8-8":"Mariana","8-9":"Daniela","8-10":"Irma","8-11":"Denisa","8-12":"Marie","8-13":"Lubor","8-14":"Radka","8-15":"Jolana","8-16":"Ludmila","8-17":"Naděžda","8-18":"Kryštof","8-19":"Zita","8-20":"Oleg","8-21":"Matouš","8-22":"Darina","8-23":"Berta","8-24":"Jaromír","8-25":"Zlata","8-26":"Andrea","8-27":"Jonáš","8-28":"Václav","8-29":"Michal","8-30":"Jeroným","9-1":"Igor","9-2":"Olívie","9-3":"Bohumil","9-4":"František","9-5":"Eliška","9-6":"Hanuš","9-7":"Justýna","9-8":"Věra","9-9":"Štefan","9-10":"Marina","9-11":"Andrej","9-12":"Marcel","9-13":"Renáta","9-14":"Agáta","9-15":"Tereza","9-16":"Havel","9-17":"Hedvika","9-18":"Lukáš","9-19":"Michaela","9-20":"Vendelín","9-21":"Brigita","9-22":"Sabina","9-23":"Teodor","9-24":"Nina","9-25":"Beáta","9-26":"Erik","9-27":"Šarlota","9-28":"Státní svátek","9-29":"Silvie","9-30":"Tadeáš","10-1":"Felix","10-2":"Památka zesnulých","10-3":"Hubert","10-4":"Karel","10-5":"Miriam","10-6":"Liběna","10-7":"Saskie","10-8":"Bohumír","10-9":"Bohdan","10-10":"Marina","10-11":"Martin","10-12":"Benedikt","10-13":"Tibor","10-14":"Sáva","10-15":"Leopold","10-16":"Otmar","10-17":"Mahulena","10-18":"Romana","10-19":"Alžběta","10-20":"Nikola","10-21":"Albert","10-22":"Cecílie","10-23":"Klement","10-24":"Emílie","10-25":"Kateřina","10-26":"Artur","10-27":"Xenie","10-28":"Den vzniku ČR","10-29":"Zina","10-30":"Ondřej","11-1":"Iva","11-2":"Blanka","11-3":"Svatoslav","11-4":"Barbora","11-5":"Jitka","11-6":"Mikuláš","11-7":"Ambrož","11-8":"Květoslava","11-9":"Vratislav","11-10":"Julie","11-11":"Dana","11-12":"Simona","11-13":"Lucie","11-14":"Lýdie","11-15":"Radana","11-16":"Albína","11-17":"Daniel","11-18":"Miloslav","11-19":"Ester","11-20":"Dagmar","11-21":"Natálie","11-22":"Šimon","11-23":"Vlasta","11-24":"Adam a Eva","11-25":"Boží hod","11-26":"Štěpán","11-27":"Žaneta","11-28":"Bohumila","11-29":"Judita","11-30":"David","11-31":"Silvestr"};
 
-// Inicializace
+const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"];
+const types = { bday: 'var(--accent-blue)', nameday: 'var(--accent-cyan)', anniv: '#ec4899' };
+let curYear = 2026, curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_v11') || '{}'), activeKey = null;
+
 function init() {
-    const ms = document.getElementById('monthSelect');
-    const ys = document.getElementById('yearSelect');
-    months.forEach((m, i) => ms.innerHTML += `<option value="${i}">${m}</option>`);
-    for(let y=2024; y<=2030; y++) ys.innerHTML += `<option value="${y}">${y}</option>`;
+    const moSel = document.getElementById('moSel');
+    const yrSel = document.getElementById('yrSel');
+    months.forEach((m, i) => moSel.innerHTML += `<option value="${i}">${m}</option>`);
+    for(let y=2024; y<=2035; y++) yrSel.innerHTML += `<option value="${y}">${y}</option>`;
+    moSel.onchange = (e) => { curMonth = parseInt(e.target.value); render(); };
+    yrSel.onchange = (e) => { curYear = parseInt(e.target.value); render(); };
     render();
 }
 
-function switchView(view) {
-    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('monthView').classList.remove('active-view');
-    document.getElementById('yearView').classList.remove('active-view');
-    document.getElementById('monthControls').style.display = (view === 'month') ? 'flex' : 'none';
-
-    if(view === 'month') {
-        document.querySelectorAll('.toggle-btn')[0].classList.add('active');
-        document.getElementById('monthView').classList.add('active-view');
-    } else {
-        document.querySelectorAll('.toggle-btn')[1].classList.add('active');
-        document.getElementById('yearView').classList.add('active-view');
-        renderFullYear();
-    }
-}
-
 function render() {
-    document.getElementById('monthSelect').value = curMonth;
-    document.getElementById('yearSelect').value = curYear;
-    document.getElementById('monthLabel').innerText = `${months[curMonth]} ${curYear}`;
+    document.getElementById('moSel').value = curMonth;
+    document.getElementById('yrSel').value = curYear;
+    document.getElementById('moLab').innerText = `${months[curMonth]} ${curYear}`;
     
-    const grid = document.getElementById('mainGrid');
-    grid.innerHTML = "";
-    ["Po","Út","St","Čt","Pá","So","Ne"].forEach(w => grid.innerHTML += `<div class="weekday">${w}</div>`);
+    const grid = document.getElementById('mainGrid'); grid.innerHTML = "";
+    ["PO","ÚT","ST","ČT","PÁ","SO","NE"].forEach(w => grid.innerHTML += `<div class="weekday">${w}</div>`);
     
     const first = (new Date(curYear, curMonth, 1).getDay() || 7) - 1;
     const days = new Date(curYear, curMonth + 1, 0).getDate();
-    
     for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`;
+    
+    const names = new Set();
     for(let d=1; d<=days; d++) {
         const k = `${curMonth}-${d}`;
-        const isToday = (d===new Date().getDate() && curMonth===new Date().getMonth());
+        const isToday = (d===new Date().getDate() && curMonth===new Date().getMonth() && curYear===new Date().getFullYear());
         const evs = events[k] || [];
-        let h = "";
-        evs.forEach(e => h += `<div class="ev-tag" style="background:${e.type==='bday'?'#f59e0b':'#ec4899'}">${e.n}</div>`);
-        
-        grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openEdit(${curMonth},${d})">
-            <div class="day-num">${d}</div>
-            ${h}
-        </div>`;
+        let dotHtml = "";
+        evs.forEach(e => { dotHtml += `<div class="dot" style="background:${types[e.type]}"></div>`; names.add(e.n); });
+        grid.innerHTML += `
+            <div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})">
+                <div class="day-num">${d}</div>
+                <div class="nameday-mini">${czNamedays[k] || ""}</div>
+                <div class="dots">${dotHtml}</div>
+            </div>`;
     }
+    renderTags(names);
+    renderYearGrid();
 }
 
-function renderFullYear() {
-    const container = document.getElementById('fullYearGrid');
-    container.innerHTML = "";
+function renderYearGrid() {
+    const yg = document.getElementById('yearGrid'); yg.innerHTML = "";
     for(let m=0; m<12; m++) {
-        let daysHtml = "";
-        const first = (new Date(curYear, m, 1).getDay() || 7) - 1;
-        const days = new Date(curYear, m + 1, 0).getDate();
-        
-        for(let i=0; i<first; i++) daysHtml += `<div></div>`;
-        for(let d=1; d<=days; d++) {
-            const hasEv = events[`${m}-${d}`];
-            daysHtml += `<div style="${hasEv?'color:var(--gold);font-weight:bold':''}">${d}</div>`;
+        let mg = ""; const md = new Date(curYear, m+1, 0).getDate(), mf = (new Date(curYear, m, 1).getDay() || 7) - 1;
+        for(let i=0; i<mf; i++) mg += `<div></div>`;
+        for(let d=1; d<=md; d++) {
+            const has = events[`${m}-${d}`];
+            mg += `<div class="${has ? 'mini-day-ev' : ''}">${d}</div>`;
         }
-        
-        container.innerHTML += `
-            <div class="mini-month" onclick="curMonth=${m}; switchView('month'); render();">
-                <div style="text-align:center; color:var(--gold); font-weight:bold; margin-bottom:5px;">${months[m]}</div>
-                <div class="mini-days-grid">${daysHtml}</div>
+        yg.innerHTML += `
+            <div class="mini-mo ${m===curMonth?'active':''}" onclick="curMonth=${m}; render();">
+                <div class="mini-title">${months[m]}</div>
+                <div class="mini-grid">${mg}</div>
             </div>`;
     }
 }
 
-// Obsluha událostí
-function openEdit(m, d) {
-    editDateKey = `${m}-${d}`;
-    document.getElementById('modalTitle').innerText = `${d}. ${months[m]}`;
-    document.getElementById('modalBg').classList.add('show');
-    const list = document.getElementById('eventList');
-    list.innerHTML = "";
-    (events[editDateKey] || []).forEach((ev, i) => {
-        list.innerHTML += `<div style="background:rgba(255,255,255,0.1); padding:10px; margin-bottom:5px; border-radius:8px; display:flex; justify-content:space-between">
-            <span>${ev.n}</span> <span onclick="deleteEv(${i})" style="color:red; cursor:pointer">✕</span>
-        </div>`;
+function renderTags(names) {
+    const t = document.getElementById('tags'); t.innerHTML = "";
+    Array.from(names).sort().forEach(n => {
+        t.innerHTML += `<button class="tag-btn" onclick="filterPerson('${n}')">${n}</button>`;
     });
 }
 
-function saveEvent() {
-    const name = document.getElementById('addName').value;
-    if(!name) return;
-    if(!events[editDateKey]) events[editDateKey] = [];
-    events[editDateKey].push({ n: name, type: document.getElementById('addType').value });
-    localStorage.setItem('family_cal_v8', JSON.stringify(events));
-    document.getElementById('addName').value = "";
-    closeModal(); render();
+function openDay(m, d) {
+    activeKey = `${m}-${d}`;
+    document.getElementById('modalTitle').innerText = `${d}. ${months[m]}`;
+    const list = document.getElementById('evList'); list.innerHTML = "";
+    (events[activeKey] || []).forEach((ev, i) => {
+        list.innerHTML += `<div class="ev-row"><span>${ev.n}</span><span onclick="del(${i})" style="cursor:pointer">✕</span></div>`;
+    });
+    document.getElementById('modalBg').classList.add('show');
 }
 
-function deleteEv(i) {
-    events[editDateKey].splice(i, 1);
-    localStorage.setItem('family_cal_v8', JSON.stringify(events));
-    openEdit(...editDateKey.split('-')); render();
+function save() {
+    const n = document.getElementById('addN').value.trim();
+    if(!n || !activeKey) return;
+    if(!events[activeKey]) events[activeKey] = [];
+    events[activeKey].push({ n, type: document.getElementById('addT').value, y: parseInt(document.getElementById('addY').value), note: document.getElementById('addNote').value });
+    localStorage.setItem('family_cal_v11', JSON.stringify(events));
+    document.getElementById('addN').value = "";
+    openDay(...activeKey.split('-')); render();
 }
 
+function del(i) {
+    events[activeKey].splice(i, 1);
+    if(!events[activeKey].length) delete events[activeKey];
+    localStorage.setItem('family_cal_v11', JSON.stringify(events));
+    openDay(...activeKey.split('-')); render();
+}
+
+function moveMonth(v) { curMonth += v; if(curMonth<0){curMonth=11; curYear--;} if(curMonth>11){curMonth=0; curYear++;} render(); }
+function goToday() { const n=new Date(); curYear=n.getFullYear(); curMonth=n.getMonth(); render(); }
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
-function changeMonth(v) { curMonth += v; if(curMonth<0){curMonth=11; curYear--;} if(curMonth>11){curMonth=0; curYear++;} render(); }
-function setMonth(v) { curMonth = parseInt(v); render(); }
-function setYear(v) { curYear = parseInt(v); render(); }
 
 init();
 </script>

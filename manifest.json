@@ -1,10 +1,10 @@
 {
   "name": "Rodinný Kalendář 2026",
   "short_name": "Kalendář",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a0f1a",
-  "theme_color": "#0a0f1a",
+  "theme_color": "#d99a3f",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3652/3652191.png",

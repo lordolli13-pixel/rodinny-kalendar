@@ -1,199 +1,204 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Rodinný Kalendář 2026</title>
-    <style>
-        :root {
-            --bg: #0a0f1a;
-            --panel: rgba(255, 255, 255, 0.07);
-            --border: rgba(255, 255, 255, 0.12);
-            --gold: #d99a3f;
-            --text: #ffffff;
-            --muted: #9aa6b6;
-            --clr-bday: #f59e0b;
-            --clr-nameday: #10b981;
-            --clr-anniv: #ec4899;
-            font-family: -apple-system, system-ui, sans-serif;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+<title>Profi Family Kalendář 2026</title>
+<style>
+:root {
+  --bg: #0a0f1a;
+  --panel: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.1);
+  --gold: #d99a3f;
+  --text: #ffffff;
+  --muted: #9aa6b6;
+  --clr-bday: #f59e0b;
+  --clr-nameday: #10b981;
+  --clr-anniv: #ec4899;
+  font-family: 'Inter', system-ui, sans-serif;
+}
 
-        body {
-            margin: 0; padding: 0;
-            background: #0a0f1a;
-            color: var(--text);
-            overflow-x: hidden;
-        }
+body {
+  margin:0; min-height: 100vh;
+  background: #0a0f1a;
+  color: var(--text);
+  padding: 0;
+  overflow-x: hidden;
+}
 
-        /* --- HEADER & CONTROLS --- */
-        header {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(10, 15, 26, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            padding: 10px;
-        }
+/* Fixní záhlaví pro mobil */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10, 15, 26, 0.9);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 15px;
+}
 
-        .nav-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .nav-title { font-weight: 900; color: var(--gold); font-size: 14px; letter-spacing: 1px; }
+.brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.brand .title { font-weight: 900; font-size: 16px; color: var(--gold); letter-spacing: 1px; }
 
-        .controls { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; }
-        .btn, .select {
-            background: var(--panel); border: 1px solid var(--border);
-            color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 13px; white-space: nowrap;
-        }
-        .btn-gold {
-            background: var(--gold); color: #000; font-weight: bold; border: none;
-            padding: 8px 15px; border-radius: 8px; font-size: 13px;
-        }
+/* Přepínač pohledů (Toggle) */
+.view-switch {
+  display: flex; background: var(--panel); border-radius: 12px; padding: 3px; margin-bottom: 10px;
+}
+.view-switch button {
+  flex: 1; border: none; background: transparent; color: var(--muted); 
+  padding: 8px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s;
+}
+.view-switch button.active { background: var(--gold); color: #000; }
 
-        /* --- PEOPLE SCROLL --- */
-        .people-scroll {
-            display: flex; gap: 8px; overflow-x: auto; padding: 5px 0;
-            scrollbar-width: none; /* Firefox */
-        }
-        .people-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+.controls { display: flex; gap: 8px; align-items: center; }
+.select {
+  background: var(--panel); border: 1px solid var(--border);
+  color: #fff; padding: 10px; border-radius: 10px; flex: 1; font-size: 14px;
+}
+.btn-nav { background: var(--panel); border: 1px solid var(--border); color: #fff; padding: 10px 15px; border-radius: 10px; }
 
-        .person-pill {
-            background: var(--panel); border: 1px solid var(--border);
-            padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px;
-            cursor: pointer; flex-shrink: 0;
-        }
-        .person-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
-        .person-pill span { font-size: 12px; font-weight: 500; }
+/* Horizontální scroll pro jména */
+.filter-bar { padding: 10px 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+.filter-bar::-webkit-scrollbar { display: none; }
+.tag-btn { 
+  display: inline-block; background: var(--panel); border: 1px solid var(--border); 
+  color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 12px; margin-right: 8px;
+}
 
-        /* --- MAIN CALENDAR GRID --- */
-        .calendar-container { padding: 10px; }
-        .month-label { font-size: 22px; font-weight: 800; margin: 10px 0; text-align: left; padding-left: 5px; }
+/* Hlavní kontejnery */
+.main-content { padding: 15px; }
+.view-section { display: none; }
+.view-section.active { display: block; }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-        }
+/* Měsíční mřížka - Mobilní styl */
+.month-label { font-size: 24px; font-weight: 800; margin-bottom: 15px; color: #fff; }
+.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); border-radius: 15px; overflow: hidden; }
+.weekday { background: rgba(255,255,255,0.03); font-size: 10px; color: var(--gold); text-align: center; padding: 10px 0; font-weight: bold; }
+.day {
+  background: #0a0f1a; min-height: 70px; padding: 5px; position: relative;
+  display: flex; flex-direction: column; align-items: center;
+}
+.day.today { background: rgba(217, 154, 63, 0.15); box-shadow: inset 0 0 0 1px var(--gold); }
+.day.weekend { background: rgba(255, 255, 255, 0.02); }
+.day-num { font-weight: bold; font-size: 14px; margin-bottom: 2px; }
+.nameday-label { font-size: 7px; color: var(--muted); text-align: center; height: 10px; overflow: hidden; margin-bottom: 4px; }
 
-        .weekday { background: #111827; color: var(--gold); font-size: 10px; font-weight: bold; text-align: center; padding: 8px 0; }
-        
-        .day {
-            background: #0a0f1a;
-            min-height: 60px;
-            padding: 4px;
-            display: flex; flex-direction: column; align-items: center;
-            position: relative;
-        }
-        .day.weekend { background: #0f172a; }
-        .day.today { background: rgba(217, 154, 63, 0.15); box-shadow: inset 0 0 0 1px var(--gold); }
-        .day-num { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-        .day-nameday { font-size: 7px; color: var(--muted); text-align: center; height: 16px; overflow: hidden; }
+/* Tečky pod dnem */
+.dots { display: flex; gap: 2px; justify-content: center; flex-wrap: wrap; }
+.dot { width: 6px; height: 6px; border-radius: 50%; }
 
-        .event-dots { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; margin-top: auto; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; }
+/* Roční pohled - Rolovatelné velké měsíce */
+.year-scroll-list { display: flex; flex-direction: column; gap: 30px; }
+.year-month-card { background: var(--panel); border-radius: 20px; padding: 15px; border: 1px solid var(--border); }
+.year-month-title { font-size: 18px; font-weight: bold; color: var(--gold); margin-bottom: 10px; text-transform: uppercase; }
 
-        /* --- MODAL --- */
-        .modal-bg {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000;
-            display: none; align-items: flex-end; /* Modal vyjíždí zespodu */
-        }
-        .modal-bg.show { display: flex; }
-        .modal {
-            background: #161b26; width: 100%; border-radius: 25px 25px 0 0;
-            padding: 20px; box-sizing: border-box; max-height: 90vh; overflow-y: auto;
-            border-top: 2px solid var(--gold);
-        }
+/* Modal - Mobilní "Bottom Sheet" styl */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000;
+  display: none; align-items: flex-end;
+}
+.modal-bg.show { display: flex; }
+.modal { 
+  background: #161b26; width: 100%; border-radius: 25px 25px 0 0; padding: 25px; 
+  box-sizing: border-box; border-top: 2px solid var(--gold);
+}
+.modal input, .modal select, .modal textarea {
+  width: 100%; margin-bottom: 12px; padding: 15px; border-radius: 12px;
+  background: #000; border: 1px solid var(--border); color: #fff; font-size: 16px; box-sizing: border-box;
+}
 
-        .modal input, .modal select, .modal textarea {
-            width: 100%; background: #000; border: 1px solid var(--border);
-            color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 16px;
-        }
-
-        .ev-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; border-radius: 12px; margin-bottom: 8px; color: #000; font-weight: bold;
-        }
-
-        /* --- YEAR PREVIEW (at bottom) --- */
-        .year-preview { padding: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 30px;}
-        .mini-month { background: var(--panel); padding: 5px; border-radius: 8px; font-size: 8px; text-align: center; border: 1px solid transparent; }
-        .mini-month.active { border-color: var(--gold); }
-    </style>
+.ev-item {
+    background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+}
+</style>
 </head>
 <body>
 
 <header>
-    <div class="nav-row">
-        <div class="nav-title">RODINNÝ KALENDÁŘ</div>
-        <button class="btn-gold" id="todayBtn">DNES</button>
-    </div>
-    <div class="controls">
-        <button class="btn" id="prevMonth">◀</button>
-        <select id="monthSelect" class="select"></select>
-        <select id="yearSelect" class="select"></select>
-        <button class="btn" id="nextMonth">▶</button>
-    </div>
-    <div class="people-scroll" id="peopleBar"></div>
+  <div class="brand">
+    <div class="title">FAMILY CALENDAR</div>
+    <button class="btn-gold" id="todayBtn">DNES</button>
+  </div>
+
+  <div class="view-switch">
+    <button id="btnMonthView" class="active">MĚSÍC</button>
+    <button id="btnYearView">ROK</button>
+  </div>
+
+  <div class="controls" id="monthControls">
+    <button class="btn-nav" id="prevMonth">◀</button>
+    <select id="monthSelect" class="select"></select>
+    <select id="yearSelect" class="select"></select>
+    <button class="btn-nav" id="nextMonth">▶</button>
+  </div>
+
+  <div class="filter-bar" id="nameTags"></div>
 </header>
 
-<main class="calendar-container">
+<main class="main-content">
+  <section id="monthSection" class="view-section active">
     <div id="monthLabel" class="month-label">Leden 2026</div>
-    <div class="grid" id="mainGrid"></div>
-    
-    <div class="filter-title" style="margin: 20px 0 10px 5px;">ROČNÍ NÁHLED</div>
-    <div class="year-preview" id="yearGrid"></div>
+    <div class="month-grid" id="mainGrid"></div>
+  </section>
+
+  <section id="yearSection" class="view-section">
+    <div class="year-scroll-list" id="yearScrollList"></div>
+  </section>
 </main>
 
 <div class="modal-bg" id="modalBg">
-    <div class="modal">
-        <div style="width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 15px;"></div>
-        <h3 id="modalTitle" style="margin:0 0 15px 0; color:var(--gold);">Detail dne</h3>
-        
-        <div id="modalContent"></div>
-        
-        <div id="addForm" style="margin-top:20px; padding-top:20px; border-top: 1px solid var(--border);">
-            <input type="text" id="addName" placeholder="Jméno...">
-            <div style="display:flex; gap:10px;">
-                <select id="addType" style="flex:2;">
-                    <option value="bday">🎂 Narozeniny</option>
-                    <option value="nameday">🌸 Svátek</option>
-                    <option value="anniv">💍 Výročí</option>
-                </select>
-                <input type="number" id="addYear" placeholder="Rok" style="flex:1;">
-            </div>
-            <textarea id="addNote" placeholder="Poznámka..." rows="2"></textarea>
-            <button class="btn-gold" style="width:100%; padding:15px;" id="saveBtn">ULOŽIT UDÁLOST</button>
-        </div>
-        
-        <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:20px; font-weight:bold; padding:10px;">ZAVŘÍT</button>
+  <div class="modal">
+    <div style="width: 50px; height: 5px; background: var(--border); border-radius: 10px; margin: -10px auto 20px;"></div>
+    <h3 id="modalTitle" style="color:var(--gold); margin:0 0 20px 0;">Detail dne</h3>
+    <div id="eventList"></div>
+    
+    <div id="editForm">
+      <input type="text" id="addName" placeholder="Jméno...">
+      <div style="display:flex; gap:10px;">
+        <select id="addType" style="flex:2">
+            <option value="bday">🎂 Narozeniny</option>
+            <option value="nameday">🌸 Svátek</option>
+            <option value="anniv">💍 Výročí</option>
+        </select>
+        <input type="number" id="addYear" placeholder="Rok" style="flex:1">
+      </div>
+      <textarea id="addNote" placeholder="Poznámka..." rows="2"></textarea>
+      <button class="btn-gold" style="width:100%; padding:18px;" id="saveBtn">ULOŽIT</button>
     </div>
+    <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:20px; font-weight:bold;">ZAVŘÍT</button>
+  </div>
 </div>
 
 <script>
-const czNamedays = {"0-1":"Nový rok","0-2":"Karina","0-3":"Radmila","0-4":"Diana","0-5":"Dalimil","0-6":"Tři králové","0-24":"Milena","1-14":"Valentýn","2-19":"Josef","3-24":"Jiří","4-1":"Svátek","4-8":"Svátek","4-24":"Jana","5-24":"Jan","6-5":"Svátek","6-6":"Svátek","9-28":"Václav","10-28":"Státní","11-17":"Státní","11-24":"Adam a Eva","11-25":"Boží hod","11-26":"Štěpán"};
+// Pomocná data (zkráceno pro ukázku)
+const czNamedays = {"0-1":"Nový rok","0-6":"Tři králové","1-14":"Valentýn","2-19":"Josef","3-24":"Jiří","4-1":"Svátek práce","4-8":"Vítězství","6-5":"Cyril/Metoděj","6-6":"Jan Hus","9-28":"Václav","10-28":"Vznik ČSR","11-17":"Demokracie","11-24":"Adam/Eva","11-25":"1.svátek","11-26":"2.svátek"};
 const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"];
 const cats = { bday: { c: 'var(--clr-bday)', i: '🎂' }, nameday: { c: 'var(--clr-nameday)', i: '🌸' }, anniv: { c: 'var(--clr-anniv)', i: '💍' } };
 
-let curYear = 2026, 
-    curMonth = new Date().getMonth(), 
-    events = JSON.parse(localStorage.getItem('family_cal_v10') || '{}'), 
-    editKey = null;
+let curYear = 2026, curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_v11') || '{}'), editKey = null;
 
 function init() {
-    const ms = document.getElementById('monthSelect');
-    const ys = document.getElementById('yearSelect');
-    months.forEach((m,i) => ms.innerHTML += `<option value="${i}">${m}</option>`);
-    for(let y=2024; y<=2030; y++) ys.innerHTML += `<option value="${y}">${y}</option>`;
+    months.forEach((m,i) => document.getElementById('monthSelect').innerHTML += `<option value="${i}">${m}</option>`);
+    for(let y=2024; y<=2030; y++) document.getElementById('yearSelect').innerHTML += `<option value="${y}">${y}</option>`;
     
+    // Přepínání pohledů
+    document.getElementById('btnMonthView').onclick = () => switchView('month');
+    document.getElementById('btnYearView').onclick = () => switchView('year');
+
     document.getElementById('prevMonth').onclick = () => { curMonth--; if(curMonth<0){curMonth=11; curYear--;} render(); };
     document.getElementById('nextMonth').onclick = () => { curMonth++; if(curMonth>11){curMonth=0; curYear++;} render(); };
-    ms.onchange = (e) => { curMonth = parseInt(e.target.value); render(); };
-    ys.onchange = (e) => { curYear = parseInt(e.target.value); render(); };
+    document.getElementById('monthSelect').onchange = (e) => { curMonth = parseInt(e.target.value); render(); };
+    document.getElementById('yearSelect').onchange = (e) => { curYear = parseInt(e.target.value); render(); };
     document.getElementById('todayBtn').onclick = () => { const n=new Date(); curYear=n.getFullYear(); curMonth=n.getMonth(); render(); };
-    
-    document.getElementById('saveBtn').onclick = saveEvent;
+
     render();
+}
+
+function switchView(view) {
+    document.getElementById('btnMonthView').classList.toggle('active', view==='month');
+    document.getElementById('btnYearView').classList.toggle('active', view==='year');
+    document.getElementById('monthSection').classList.toggle('active', view==='month');
+    document.getElementById('yearSection').classList.toggle('active', view==='year');
+    document.getElementById('monthControls').style.display = view==='month' ? 'flex' : 'none';
 }
 
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
@@ -201,117 +206,72 @@ function closeModal() { document.getElementById('modalBg').classList.remove('sho
 function openDay(m, d) {
     editKey = `${m}-${d}`;
     document.getElementById('modalTitle').innerText = `${d}. ${months[m]} ${curYear}`;
-    document.getElementById('addForm').style.display = "block";
-    const content = document.getElementById('modalContent');
-    content.innerHTML = "";
-    
+    const list = document.getElementById('eventList'); list.innerHTML = "";
     (events[editKey] || []).forEach((ev, i) => {
         const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} let)` : "";
-        content.innerHTML += `
-            <div class="ev-item" style="background:${cats[ev.type].c}">
-                <span>${cats[ev.type].i} ${ev.n}${age}</span>
-                <span onclick="delEv('${editKey}',${i})" style="padding:5px;">✕</span>
-            </div>`;
+        list.innerHTML += `<div class="ev-item" style="border-left:4px solid ${cats[ev.type].c}">
+            <span>${cats[ev.type].i} ${ev.n}${age}</span>
+            <button onclick="delEv('${editKey}',${i})" style="background:none; border:none; color:red; font-size:20px;">✕</button>
+        </div>`;
     });
     document.getElementById('modalBg').classList.add('show');
 }
 
-function openPerson(name) {
-    document.getElementById('modalTitle').innerText = `Události: ${name}`;
-    document.getElementById('addForm').style.display = "none";
-    const content = document.getElementById('modalContent');
-    content.innerHTML = "";
-    
-    for(let k in events) {
-        events[k].forEach(ev => {
-            if(ev.n === name) {
-                const [m, d] = k.split('-');
-                content.innerHTML += `
-                    <div style="background:var(--panel); padding:15px; border-radius:12px; margin-bottom:8px; border-left:4px solid ${cats[ev.type].c}">
-                        <div style="font-size:10px; color:var(--gold);">${d}. ${months[m]}</div>
-                        <div style="font-weight:bold;">${cats[ev.type].i} ${ev.type === 'bday' ? 'Narozeniny' : 'Událost'}</div>
-                    </div>`;
-            }
-        });
-    }
-    document.getElementById('modalBg').classList.add('show');
-}
+function delEv(key, i) { events[key].splice(i,1); if(!events[key].length) delete events[key]; localStorage.setItem('family_cal_v11', JSON.stringify(events)); openDay(...key.split('-')); render(); }
 
-function saveEvent() {
-    const name = document.getElementById('addName').value.trim();
-    if(!name) return;
+document.getElementById('saveBtn').onclick = () => {
+    const n = document.getElementById('addName').value.trim();
+    if(!n) return;
     if(!events[editKey]) events[editKey] = [];
-    events[editKey].push({
-        n: name,
-        type: document.getElementById('addType').value,
-        y: parseInt(document.getElementById('addYear').value) || null,
-        note: document.getElementById('addNote').value
-    });
-    localStorage.setItem('family_cal_v10', JSON.stringify(events));
-    document.getElementById('addName').value = "";
-    openDay(...editKey.split('-'));
-    render();
-}
-
-function delEv(key, i) {
-    events[key].splice(i, 1);
-    if(!events[key].length) delete events[key];
-    localStorage.setItem('family_cal_v10', JSON.stringify(events));
-    openDay(...key.split('-'));
-    render();
-}
+    events[editKey].push({ n, type: document.getElementById('addType').value, y: parseInt(document.getElementById('addYear').value), note: document.getElementById('addNote').value });
+    localStorage.setItem('family_cal_v11', JSON.stringify(events));
+    document.getElementById('addName').value = ""; render(); openDay(...editKey.split('-'));
+};
 
 function render() {
     document.getElementById('monthSelect').value = curMonth;
     document.getElementById('yearSelect').value = curYear;
     document.getElementById('monthLabel').innerText = `${months[curMonth]} ${curYear}`;
     
+    // Měsíční mřížka
     const grid = document.getElementById('mainGrid'); grid.innerHTML = "";
     ["Po","Út","St","Čt","Pá","So","Ne"].forEach(w => grid.innerHTML += `<div class="weekday">${w}</div>`);
-    
-    const first = (new Date(curYear, curMonth, 1).getDay() || 7) - 1;
-    const days = new Date(curYear, curMonth + 1, 0).getDate();
-    
-    for(let i=0; i<first; i++) grid.innerHTML += `<div class="day" style="opacity:0.2"></div>`;
+    const first = (new Date(curYear, curMonth, 1).getDay() || 7) - 1, days = new Date(curYear, curMonth + 1, 0).getDate();
+    for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`;
     
     const names = new Set();
     for(let d=1; d<=days; d++) {
-        const k = `${curMonth}-${d}`;
-        const evs = events[k] || [];
+        const k = `${curMonth}-${d}`, evs = events[k] || [];
         const isToday = (d===new Date().getDate() && curMonth===new Date().getMonth() && curYear===new Date().getFullYear());
-        const isWeekend = (new Date(curYear, curMonth, d).getDay() % 6 === 0);
-        
-        let dots = "";
-        evs.forEach(e => {
-            dots += `<div class="dot" style="background:${cats[e.type].c}"></div>`;
-            names.add(e.n);
-        });
-        
-        grid.innerHTML += `
-            <div class="day ${isToday?'today':''} ${isWeekend?'weekend':''}" onclick="openDay(${curMonth},${d})">
-                <div class="day-num">${d}</div>
-                <div class="day-nameday">${czNamedays[k] || ""}</div>
-                <div class="event-dots">${dots}</div>
-            </div>`;
+        let dots = ""; evs.forEach(e => { dots += `<div class="dot" style="background:${cats[e.type].c}"></div>`; names.add(e.n); });
+        grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})">
+            <div class="day-num">${d}</div>
+            <div class="nameday-label">${czNamedays[k] || ""}</div>
+            <div class="dots">${dots}</div>
+        </div>`;
     }
 
-    // Update people bar
-    const pb = document.getElementById('peopleBar'); pb.innerHTML = "";
-    Array.from(names).sort().forEach(n => {
-        const p = document.createElement('div');
-        p.className = 'person-pill';
-        p.innerHTML = `<div class="dot"></div><span>${n}</span>`;
-        p.onclick = () => openPerson(n);
-        pb.appendChild(p);
-    });
-
-    // Year preview
-    const yg = document.getElementById('yearGrid'); yg.innerHTML = "";
+    // Roční pohled - Rolovací karty
+    const yearList = document.getElementById('yearScrollList'); yearList.innerHTML = "";
     for(let m=0; m<12; m++) {
-        yg.innerHTML += `<div class="mini-month ${m===curMonth?'active':''}" onclick="curMonth=${m}; render();">${months[m].substring(0,3)}</div>`;
+        let mg = ""; const md = new Date(curYear, m+1, 0).getDate(), mf = (new Date(curYear, m, 1).getDay() || 7) - 1;
+        for(let i=0; i<mf; i++) mg += `<div></div>`;
+        for(let d=1; d<=md; d++) {
+            const hasEv = events[`${m}-${d}`];
+            mg += `<div style="padding:5px; border-radius:5px; ${hasEv ? 'background:'+cats[hasEv[0].type].c+'; color:#000; font-weight:bold;' : ''}">${d}</div>`;
+        }
+        yearList.innerHTML += `<div class="year-month-card">
+            <div class="year-month-title">${months[m]}</div>
+            <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; font-size:12px; text-align:center;">${mg}</div>
+        </div>`;
     }
-}
 
+    // Tagy jmen
+    const nt = document.getElementById('nameTags'); nt.innerHTML = "";
+    Array.from(names).sort().forEach(n => {
+        nt.innerHTML += `<span class="tag-btn" onclick="alert('Budoucí funkce: Filtr pro ${n}')">${n}</span>`;
+    });
+}
 init();
 </script>
 </body>

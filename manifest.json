@@ -1,13 +1,14 @@
 {
-  "name": "Rodinný Kalendář 2026",
+  "name": "Family Calendar Slate Pro",
   "short_name": "Kalendář",
-  "start_url": "./index.html",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0a0f1a",
-  "theme_color": "#d99a3f",
+  "background_color": "#2F4F4F",
+  "theme_color": "#2F4F4F",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3652/3652191.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

@@ -3,112 +3,71 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
-<title>Profi Family Kalendář 2026</title>
+<title>Family Calendar Pro 2026</title>
 <style>
 :root {
   --bg: #0a0f1a;
   --panel: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.12);
   --gold: #d99a3f;
   --text: #ffffff;
   --muted: #9aa6b6;
   --clr-bday: #f59e0b;
   --clr-nameday: #10b981;
   --clr-anniv: #ec4899;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
 }
 
-body {
-  margin:0; min-height: 100vh;
-  background: #0a0f1a;
-  color: var(--text);
-  padding: 0;
-  overflow-x: hidden;
-}
+body { margin:0; min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 50px; }
 
-/* Fixní záhlaví pro mobil */
-header {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(10, 15, 26, 0.9);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 15px;
-}
+header { position: sticky; top: 0; z-index: 100; background: rgba(10, 15, 26, 0.98); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 12px 16px; }
+.brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.brand .title { font-weight: 900; font-size: 18px; color: var(--gold); letter-spacing: 1px; }
 
-.brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.brand .title { font-weight: 900; font-size: 16px; color: var(--gold); letter-spacing: 1px; }
-
-/* Přepínač pohledů (Toggle) */
-.view-switch {
-  display: flex; background: var(--panel); border-radius: 12px; padding: 3px; margin-bottom: 10px;
-}
-.view-switch button {
-  flex: 1; border: none; background: transparent; color: var(--muted); 
-  padding: 8px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s;
-}
+.view-switch { display: flex; background: rgba(255,255,255,0.05); border-radius: 14px; padding: 4px; margin-bottom: 12px; }
+.view-switch button { flex: 1; border: none; background: transparent; color: var(--muted); padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; transition: 0.3s; }
 .view-switch button.active { background: var(--gold); color: #000; }
 
-.controls { display: flex; gap: 8px; align-items: center; }
-.select {
-  background: var(--panel); border: 1px solid var(--border);
-  color: #fff; padding: 10px; border-radius: 10px; flex: 1; font-size: 14px;
-}
-.btn-nav { background: var(--panel); border: 1px solid var(--border); color: #fff; padding: 10px 15px; border-radius: 10px; }
+.person-search { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+.person-search::-webkit-scrollbar { display: none; }
+.person-box { background: linear-gradient(135deg, rgba(217, 154, 63, 0.15), rgba(217, 154, 63, 0.05)); border: 1px solid rgba(217, 154, 63, 0.5); color: var(--gold); padding: 10px 20px; border-radius: 20px; white-space: nowrap; font-size: 14px; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.2s; }
 
-/* Horizontální scroll pro jména */
-.filter-bar { padding: 10px 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
-.filter-bar::-webkit-scrollbar { display: none; }
-.tag-btn { 
-  display: inline-block; background: var(--panel); border: 1px solid var(--border); 
-  color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 12px; margin-right: 8px;
-}
+.controls { display: flex; gap: 8px; margin-top: 5px; }
+.select { background: var(--panel); border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 12px; flex: 1; font-size: 15px; appearance: none; }
+.btn-nav { background: var(--panel); border: 1px solid var(--border); color: #fff; padding: 10px 18px; border-radius: 12px; font-weight: bold; }
 
-/* Hlavní kontejnery */
-.main-content { padding: 15px; }
+.main-content { padding: 16px; }
 .view-section { display: none; }
 .view-section.active { display: block; }
 
-/* Měsíční mřížka - Mobilní styl */
-.month-label { font-size: 24px; font-weight: 800; margin-bottom: 15px; color: #fff; }
-.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); border-radius: 15px; overflow: hidden; }
-.weekday { background: rgba(255,255,255,0.03); font-size: 10px; color: var(--gold); text-align: center; padding: 10px 0; font-weight: bold; }
-.day {
-  background: #0a0f1a; min-height: 70px; padding: 5px; position: relative;
-  display: flex; flex-direction: column; align-items: center;
-}
-.day.today { background: rgba(217, 154, 63, 0.15); box-shadow: inset 0 0 0 1px var(--gold); }
-.day.weekend { background: rgba(255, 255, 255, 0.02); }
-.day-num { font-weight: bold; font-size: 14px; margin-bottom: 2px; }
-.nameday-label { font-size: 7px; color: var(--muted); text-align: center; height: 10px; overflow: hidden; margin-bottom: 4px; }
+.agenda-section { margin-bottom: 25px; max-height: 180px; overflow-y: auto; padding-right: 5px; }
+.agenda-title { font-size: 12px; font-weight: 800; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; }
+.ev-row { background: var(--panel); padding: 12px 14px; border-radius: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; border-left: 5px solid transparent; }
 
-/* Tečky pod dnem */
-.dots { display: flex; gap: 2px; justify-content: center; flex-wrap: wrap; }
-.dot { width: 6px; height: 6px; border-radius: 50%; }
+.month-label { font-size: 26px; font-weight: 900; margin-bottom: 12px; color: #fff; }
+.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
+.weekday { background: #111827; font-size: 11px; color: var(--gold); text-align: center; padding: 12px 0; font-weight: 800; }
+.day { background: #0a0f1a; min-height: 80px; padding: 10px 4px; position: relative; display: flex; flex-direction: column; align-items: center; }
+.day.today { background: rgba(217, 154, 63, 0.15); box-shadow: inset 0 0 0 1.5px var(--gold); }
+.day-num { font-weight: 900; font-size: 17px; margin-bottom: 5px; }
 
-/* Roční pohled - Rolovatelné velké měsíce */
-.year-scroll-list { display: flex; flex-direction: column; gap: 30px; }
-.year-month-card { background: var(--panel); border-radius: 20px; padding: 15px; border: 1px solid var(--border); }
-.year-month-title { font-size: 18px; font-weight: bold; color: var(--gold); margin-bottom: 10px; text-transform: uppercase; }
+.symbols { display: flex; gap: 3px; width: 90%; height: 12px; justify-content: center; margin-top: auto; padding-bottom: 10px; }
+.symbol-block { flex: 1; height: 100%; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.5); max-width: 15px; }
 
-/* Modal - Mobilní "Bottom Sheet" styl */
-.modal-bg {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000;
-  display: none; align-items: flex-end;
-}
+.stats-section { margin-top: 30px; background: var(--panel); border-radius: 20px; padding: 20px; border: 1px solid var(--border); }
+.stats-bars { display: flex; align-items: flex-end; gap: 4px; height: 140px; margin-top: 25px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+.bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; cursor: pointer; position: relative; }
+.bar-stack { width: 85%; display: flex; flex-direction: column-reverse; border-radius: 4px 4px 0 0; overflow: hidden; transition: height 0.4s ease; min-height: 2px; }
+.segment { width: 100%; }
+.bar-label { font-size: 10px; color: var(--muted); font-weight: 800; margin-top: 8px; }
+.bar-value { position: absolute; top: -22px; font-size: 9px; font-weight: 900; color: #fff; width: 100%; text-align: center; }
+
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 1000; display: none; align-items: flex-end; }
 .modal-bg.show { display: flex; }
-.modal { 
-  background: #161b26; width: 100%; border-radius: 25px 25px 0 0; padding: 25px; 
-  box-sizing: border-box; border-top: 2px solid var(--gold);
-}
-.modal input, .modal select, .modal textarea {
-  width: 100%; margin-bottom: 12px; padding: 15px; border-radius: 12px;
-  background: #000; border: 1px solid var(--border); color: #fff; font-size: 16px; box-sizing: border-box;
-}
+.modal { background: #161b26; width: 100%; border-radius: 35px 35px 0 0; padding: 30px 25px; box-sizing: border-box; border-top: 4px solid var(--gold); }
+.modal input, .modal select { width: 100%; margin-bottom: 12px; padding: 18px; border-radius: 16px; background: #000; border: 1px solid var(--border); color: #fff; font-size: 16px; }
 
-.ev-item {
-    background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 10px;
-    display: flex; justify-content: space-between; align-items: center;
-}
+.year-month-card { background: var(--panel); padding: 20px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
 </style>
 </head>
 <body>
@@ -116,80 +75,83 @@ header {
 <header>
   <div class="brand">
     <div class="title">FAMILY CALENDAR</div>
-    <button class="btn-gold" id="todayBtn">DNES</button>
+    <button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#000; border:none; padding:10px 20px;">DNES</button>
   </div>
-
   <div class="view-switch">
     <button id="btnMonthView" class="active">MĚSÍC</button>
     <button id="btnYearView">ROK</button>
   </div>
-
+  <div class="person-search" id="personSearch"></div>
   <div class="controls" id="monthControls">
     <button class="btn-nav" id="prevMonth">◀</button>
     <select id="monthSelect" class="select"></select>
     <select id="yearSelect" class="select"></select>
     <button class="btn-nav" id="nextMonth">▶</button>
   </div>
-
-  <div class="filter-bar" id="nameTags"></div>
 </header>
 
 <main class="main-content">
   <section id="monthSection" class="view-section active">
-    <div id="monthLabel" class="month-label">Leden 2026</div>
+    <div id="monthLabel" class="month-label">—</div>
+    <div class="agenda-section">
+        <div class="agenda-title">Vaše rodinné oslavy:</div>
+        <div id="monthAgenda"></div>
+    </div>
     <div class="month-grid" id="mainGrid"></div>
+    <div class="stats-section">
+      <div class="agenda-title">Náklady dle typu (1000 Kč/ks)</div>
+      <div class="stats-bars" id="statsBars"></div>
+      <div style="display:flex; gap:10px; margin-top:15px; font-size:10px; font-weight:bold; justify-content:center;">
+        <span style="color:var(--clr-bday)">● Nar.</span>
+        <span style="color:var(--clr-nameday)">● Svát.</span>
+        <span style="color:var(--clr-anniv)">● Výr.</span>
+      </div>
+    </div>
   </section>
-
   <section id="yearSection" class="view-section">
     <div class="year-scroll-list" id="yearScrollList"></div>
   </section>
 </main>
 
-<div class="modal-bg" id="modalBg">
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this) closeModal()">
   <div class="modal">
-    <div style="width: 50px; height: 5px; background: var(--border); border-radius: 10px; margin: -10px auto 20px;"></div>
-    <h3 id="modalTitle" style="color:var(--gold); margin:0 0 20px 0;">Detail dne</h3>
+    <div style="width: 60px; height: 6px; background: var(--border); border-radius: 10px; margin: -10px auto 25px;"></div>
+    <h3 id="modalTitle" style="color:var(--gold); margin:0 0 20px 0; text-align:center; font-size: 24px;">Detail dne</h3>
     <div id="eventList"></div>
-    
-    <div id="editForm">
-      <input type="text" id="addName" placeholder="Jméno...">
-      <div style="display:flex; gap:10px;">
+    <div id="editForm" style="border-top:1px solid var(--border); padding-top:20px; margin-top:20px;">
+      <input type="text" id="addName" placeholder="Jméno (např. Jirka)">
+      <div style="display:flex; gap:12px;">
         <select id="addType" style="flex:2">
             <option value="bday">🎂 Narozeniny</option>
             <option value="nameday">🌸 Svátek</option>
             <option value="anniv">💍 Výročí</option>
         </select>
-        <input type="number" id="addYear" placeholder="Rok" style="flex:1">
+        <input type="number" id="addYear" placeholder="Rok narození" style="flex:1">
       </div>
-      <textarea id="addNote" placeholder="Poznámka..." rows="2"></textarea>
-      <button class="btn-gold" style="width:100%; padding:18px;" id="saveBtn">ULOŽIT</button>
+      <button class="btn-nav" style="width:100%; padding:20px; background:var(--gold); color:#000; border:none; border-radius:18px; font-size:16px;" id="saveBtn">PŘIDAT OSLAVU</button>
     </div>
-    <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:20px; font-weight:bold;">ZAVŘÍT</button>
+    <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:25px; font-weight:bold; font-size:16px;">ZAVŘÍT</button>
   </div>
 </div>
 
 <script>
-// Pomocná data (zkráceno pro ukázku)
-const czNamedays = {"0-1":"Nový rok","0-6":"Tři králové","1-14":"Valentýn","2-19":"Josef","3-24":"Jiří","4-1":"Svátek práce","4-8":"Vítězství","6-5":"Cyril/Metoděj","6-6":"Jan Hus","9-28":"Václav","10-28":"Vznik ČSR","11-17":"Demokracie","11-24":"Adam/Eva","11-25":"1.svátek","11-26":"2.svátek"};
 const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"];
+const shortMonths = ["Led","Úno","Bře","Dub","Kvě","Čer","Čvc","Srp","Zář","Říj","Lis","Pro"];
 const cats = { bday: { c: 'var(--clr-bday)', i: '🎂' }, nameday: { c: 'var(--clr-nameday)', i: '🌸' }, anniv: { c: 'var(--clr-anniv)', i: '💍' } };
 
-let curYear = 2026, curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_v11') || '{}'), editKey = null;
+let curYear = 2026, curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_v17') || '{}'), editKey = null;
 
 function init() {
     months.forEach((m,i) => document.getElementById('monthSelect').innerHTML += `<option value="${i}">${m}</option>`);
-    for(let y=2024; y<=2030; y++) document.getElementById('yearSelect').innerHTML += `<option value="${y}">${y}</option>`;
-    
-    // Přepínání pohledů
+    for(let y=2024; y<=2035; y++) document.getElementById('yearSelect').innerHTML += `<option value="${y}">${y}</option>`;
     document.getElementById('btnMonthView').onclick = () => switchView('month');
     document.getElementById('btnYearView').onclick = () => switchView('year');
-
     document.getElementById('prevMonth').onclick = () => { curMonth--; if(curMonth<0){curMonth=11; curYear--;} render(); };
     document.getElementById('nextMonth').onclick = () => { curMonth++; if(curMonth>11){curMonth=0; curYear++;} render(); };
     document.getElementById('monthSelect').onchange = (e) => { curMonth = parseInt(e.target.value); render(); };
     document.getElementById('yearSelect').onchange = (e) => { curYear = parseInt(e.target.value); render(); };
     document.getElementById('todayBtn').onclick = () => { const n=new Date(); curYear=n.getFullYear(); curMonth=n.getMonth(); render(); };
-
+    document.getElementById('saveBtn').onclick = saveEvent;
     render();
 }
 
@@ -198,7 +160,6 @@ function switchView(view) {
     document.getElementById('btnYearView').classList.toggle('active', view==='year');
     document.getElementById('monthSection').classList.toggle('active', view==='month');
     document.getElementById('yearSection').classList.toggle('active', view==='year');
-    document.getElementById('monthControls').style.display = view==='month' ? 'flex' : 'none';
 }
 
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
@@ -206,71 +167,134 @@ function closeModal() { document.getElementById('modalBg').classList.remove('sho
 function openDay(m, d) {
     editKey = `${m}-${d}`;
     document.getElementById('modalTitle').innerText = `${d}. ${months[m]} ${curYear}`;
+    document.getElementById('editForm').style.display = "block";
     const list = document.getElementById('eventList'); list.innerHTML = "";
     (events[editKey] || []).forEach((ev, i) => {
         const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} let)` : "";
-        list.innerHTML += `<div class="ev-item" style="border-left:4px solid ${cats[ev.type].c}">
-            <span>${cats[ev.type].i} ${ev.n}${age}</span>
-            <button onclick="delEv('${editKey}',${i})" style="background:none; border:none; color:red; font-size:20px;">✕</button>
+        list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:16px; border-radius:14px; margin-bottom:10px; border-left:6px solid ${cats[ev.type].c}">
+            <span style="font-weight:900; font-size:16px;">${cats[ev.type].i} ${ev.n}${age}</span>
+            <button onclick="delEv('${editKey}',${i})" style="color:#ff4444; background:rgba(255,0,0,0.15); border:none; padding:10px 15px; border-radius:10px; font-weight:bold;">Smazat</button>
         </div>`;
     });
     document.getElementById('modalBg').classList.add('show');
 }
 
-function delEv(key, i) { events[key].splice(i,1); if(!events[key].length) delete events[key]; localStorage.setItem('family_cal_v11', JSON.stringify(events)); openDay(...key.split('-')); render(); }
+function openPersonFilter(name) {
+    document.getElementById('modalTitle').innerText = `Vše pro: ${name}`;
+    document.getElementById('editForm').style.display = "none";
+    const list = document.getElementById('eventList'); list.innerHTML = "";
+    for (let k in events) {
+        events[k].forEach(ev => {
+            if(ev.n === name) {
+                const [m, d] = k.split('-');
+                list.innerHTML += `<div style="padding:15px; border-bottom:1px solid var(--border); font-size:16px;"><strong>${d}. ${months[m]}</strong>: ${cats[ev.type].i} ${ev.type === 'bday' ? 'Narozeniny' : ev.type === 'anniv' ? 'Výročí' : 'Svátek'}</div>`;
+            }
+        });
+    }
+    document.getElementById('modalBg').classList.add('show');
+}
 
-document.getElementById('saveBtn').onclick = () => {
+function saveEvent() {
     const n = document.getElementById('addName').value.trim();
     if(!n) return;
     if(!events[editKey]) events[editKey] = [];
-    events[editKey].push({ n, type: document.getElementById('addType').value, y: parseInt(document.getElementById('addYear').value), note: document.getElementById('addNote').value });
-    localStorage.setItem('family_cal_v11', JSON.stringify(events));
-    document.getElementById('addName').value = ""; render(); openDay(...editKey.split('-'));
-};
+    events[editKey].push({ n, type: document.getElementById('addType').value, y: parseInt(document.getElementById('addYear').value) || null });
+    localStorage.setItem('family_cal_v17', JSON.stringify(events));
+    document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
+}
+
+function delEv(key, i) {
+    if(confirm("Opravdu smazat?")) {
+        events[key].splice(i,1); if(!events[key].length) delete events[key]; 
+        localStorage.setItem('family_cal_v17', JSON.stringify(events)); 
+        openDay(...key.split('-')); render();
+    }
+}
+
+function updateStats() {
+    const monthlyStats = Array.from({ length: 12 }, () => ({ bday: 0, nameday: 0, anniv: 0, total: 0 }));
+    for (let k in events) {
+        const m = parseInt(k.split('-')[0]);
+        if (m >= 0 && m < 12) {
+            events[k].forEach(ev => { monthlyStats[m][ev.type]++; monthlyStats[m].total++; });
+        }
+    }
+    const maxVal = Math.max(...monthlyStats.map(s => s.total));
+    const scale = maxVal > 0 ? maxVal : 1; 
+    const container = document.getElementById('statsBars');
+    container.innerHTML = monthlyStats.map((s, i) => {
+        const totalHeight = s.total > 0 ? (s.total / scale) * 100 : 2;
+        const isActive = i === curMonth;
+        const segments = s.total > 0 ? `
+            <div class="segment" style="height:${(s.bday/s.total)*100}%; background:var(--clr-bday)"></div>
+            <div class="segment" style="height:${(s.nameday/s.total)*100}%; background:var(--clr-nameday)"></div>
+            <div class="segment" style="height:${(s.anniv/s.total)*100}%; background:var(--clr-anniv)"></div>
+        ` : `<div class="segment" style="height:100%; background:rgba(255,255,255,0.1)"></div>`;
+        return `<div class="bar-container" onclick="curMonth=${i}; render();">
+                ${s.total > 0 ? `<div class="bar-value">${s.total * 1000}.-</div>` : ''}
+                <div class="bar-stack" style="height:${totalHeight}%; opacity:${isActive ? 1 : 0.4}">${segments}</div>
+                <div class="bar-label" style="color:${isActive ? 'var(--gold)' : 'var(--muted)'}">${shortMonths[i]}</div>
+            </div>`;
+    }).join('');
+}
 
 function render() {
     document.getElementById('monthSelect').value = curMonth;
     document.getElementById('yearSelect').value = curYear;
     document.getElementById('monthLabel').innerText = `${months[curMonth]} ${curYear}`;
-    
-    // Měsíční mřížka
     const grid = document.getElementById('mainGrid'); grid.innerHTML = "";
     ["Po","Út","St","Čt","Pá","So","Ne"].forEach(w => grid.innerHTML += `<div class="weekday">${w}</div>`);
     const first = (new Date(curYear, curMonth, 1).getDay() || 7) - 1, days = new Date(curYear, curMonth + 1, 0).getDate();
     for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`;
-    
-    const names = new Set();
+    let monthAgendaHtml = ""; const names = new Set();
     for(let d=1; d<=days; d++) {
         const k = `${curMonth}-${d}`, evs = events[k] || [];
         const isToday = (d===new Date().getDate() && curMonth===new Date().getMonth() && curYear===new Date().getFullYear());
-        let dots = ""; evs.forEach(e => { dots += `<div class="dot" style="background:${cats[e.type].c}"></div>`; names.add(e.n); });
+        let symbols = ""; 
+        evs.forEach(ev => { 
+            symbols += `<div class="symbol-block" style="background:${cats[ev.type].c}"></div>`; 
+            const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} l.)` : "";
+            monthAgendaHtml += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}" onclick="openDay(${curMonth},${d})">
+                <strong style="color:var(--gold); min-width:30px;">${d}.</strong>
+                <span style="font-weight:800;">${cats[ev.type].i} ${ev.n}${age}</span>
+            </div>`;
+        });
         grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})">
-            <div class="day-num">${d}</div>
-            <div class="nameday-label">${czNamedays[k] || ""}</div>
-            <div class="dots">${dots}</div>
+            <div class="day-num">${d}</div><div class="symbols">${symbols}</div>
         </div>`;
     }
-
-    // Roční pohled - Rolovací karty
+    document.getElementById('monthAgenda').innerHTML = monthAgendaHtml || "<div style='color:var(--muted); padding:10px;'>Žádné oslavy.</div>";
+    for(let k in events) events[k].forEach(e => names.add(e.n));
+    const searchDiv = document.getElementById('personSearch'); searchDiv.innerHTML = "";
+    Array.from(names).sort().forEach(n => searchDiv.innerHTML += `<div class="person-box" onclick="openPersonFilter('${n}')">${n}</div>`);
+    
+    // --- ÚPRAVA ROČNÍHO ZOBRAZENÍ: RÁMEČEK A VYKŘIČNÍK ---
     const yearList = document.getElementById('yearScrollList'); yearList.innerHTML = "";
     for(let m=0; m<12; m++) {
-        let mg = ""; const md = new Date(curYear, m+1, 0).getDate(), mf = (new Date(curYear, m, 1).getDay() || 7) - 1;
+        let mg = ""; let yrEvs = "";
+        const md = new Date(curYear, m+1, 0).getDate(), mf = (new Date(curYear, m, 1).getDay() || 7) - 1;
         for(let i=0; i<mf; i++) mg += `<div></div>`;
         for(let d=1; d<=md; d++) {
-            const hasEv = events[`${m}-${d}`];
-            mg += `<div style="padding:5px; border-radius:5px; ${hasEv ? 'background:'+cats[hasEv[0].type].c+'; color:#000; font-weight:bold;' : ''}">${d}</div>`;
+            const k = `${m}-${d}`, hasEv = events[k];
+            let cellStyle = "font-size:10px; padding:3px; position:relative;";
+            let dayContent = d;
+            
+            if(hasEv) {
+                // Barevná linka (border) kolem dne podle první události
+                cellStyle += `border: 2px solid ${cats[hasEv[0].type].c}; border-radius:4px; font-weight:bold;`;
+                // Ikona vykřičníku k číslu
+                dayContent = `${d}<span style="color:${cats[hasEv[0].type].c}; font-size:10px; margin-left:1px;">!</span>`;
+                hasEv.forEach(ev => { yrEvs += `<div style="font-size:12px; margin-bottom:2px;"><strong>${d}.</strong> ${ev.n}</div>`; });
+            }
+            mg += `<div style="${cellStyle}">${dayContent}</div>`;
         }
-        yearList.innerHTML += `<div class="year-month-card">
-            <div class="year-month-title">${months[m]}</div>
-            <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; font-size:12px; text-align:center;">${mg}</div>
+        yearList.innerHTML += `<div class="year-month-card" onclick="curMonth=${m}; switchView('month'); render();">
+            <div style="font-weight:900; color:var(--gold); margin-bottom:10px; font-size:20px;">${months[m]}</div>
+            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center;">${mg}</div>
+            <div style="margin-top:10px; border-top:1px solid var(--border); padding-top:8px;">${yrEvs}</div>
         </div>`;
     }
-
-    // Tagy jmen
-    const nt = document.getElementById('nameTags'); nt.innerHTML = "";
-    Array.from(names).sort().forEach(n => {
-        nt.innerHTML += `<span class="tag-btn" onclick="alert('Budoucí funkce: Filtr pro ${n}')">${n}</span>`;
-    });
+    updateStats();
 }
 init();
 </script>

@@ -54,13 +54,28 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(10, 15, 26, 0.
 .symbols { display: flex; gap: 3px; width: 90%; height: 12px; justify-content: center; margin-top: auto; padding-bottom: 10px; }
 .symbol-block { flex: 1; height: 100%; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.5); max-width: 15px; }
 
-.stats-section { margin-top: 30px; background: var(--panel); border-radius: 20px; padding: 20px; border: 1px solid var(--border); }
-.stats-bars { display: flex; align-items: flex-end; gap: 4px; height: 140px; margin-top: 25px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+/* --- RESPONZIVNÍ GRAF S BOXÍKY --- */
+.stats-section { margin-top: 30px; background: var(--panel); border-radius: 20px; padding: 15px 8px; border: 1px solid var(--border); }
+.stats-bars { display: flex; align-items: flex-end; gap: 2px; height: 140px; margin-top: 40px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
 .bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; cursor: pointer; position: relative; }
-.bar-stack { width: 85%; display: flex; flex-direction: column-reverse; border-radius: 4px 4px 0 0; overflow: hidden; transition: height 0.4s ease; min-height: 2px; }
+.bar-stack { width: 85%; display: flex; flex-direction: column-reverse; border-radius: 3px 3px 0 0; overflow: hidden; transition: 0.3s; min-height: 2px; }
 .segment { width: 100%; }
-.bar-label { font-size: 10px; color: var(--muted); font-weight: 800; margin-top: 8px; }
-.bar-value { position: absolute; top: -22px; font-size: 9px; font-weight: 900; color: #fff; width: 100%; text-align: center; }
+
+.bar-value { 
+  position: absolute; top: -32px; font-size: 9px; font-weight: 900; color: #fff; 
+  transform: rotate(-45deg); white-space: nowrap; pointer-events: none;
+}
+
+/* Malé boxíky pro názvy měsíců */
+.bar-month-box {
+  margin-top: 10px; width: 95%; padding: 4px 0; border-radius: 6px;
+  background: rgba(255,255,255,0.03); border: 1px solid transparent;
+  font-size: 8px; font-weight: 900; color: var(--muted);
+  text-align: center; text-transform: uppercase;
+}
+.bar-container.active .bar-month-box {
+  background: rgba(217, 154, 63, 0.1); border-color: var(--gold); color: var(--gold);
+}
 
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 1000; display: none; align-items: flex-end; }
 .modal-bg.show { display: flex; }
@@ -73,14 +88,8 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(10, 15, 26, 0.
 <body>
 
 <header>
-  <div class="brand">
-    <div class="title">FAMILY CALENDAR</div>
-    <button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#000; border:none; padding:10px 20px;">DNES</button>
-  </div>
-  <div class="view-switch">
-    <button id="btnMonthView" class="active">MĚSÍC</button>
-    <button id="btnYearView">ROK</button>
-  </div>
+  <div class="brand"><div class="title">FAMILY CALENDAR</div><button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#000; border:none; padding:10px 20px;">DNES</button></div>
+  <div class="view-switch"><button id="btnMonthView" class="active">MĚSÍC</button><button id="btnYearView">ROK</button></div>
   <div class="person-search" id="personSearch"></div>
   <div class="controls" id="monthControls">
     <button class="btn-nav" id="prevMonth">◀</button>
@@ -93,24 +102,19 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(10, 15, 26, 0.
 <main class="main-content">
   <section id="monthSection" class="view-section active">
     <div id="monthLabel" class="month-label">—</div>
-    <div class="agenda-section">
-        <div class="agenda-title">Vaše rodinné oslavy:</div>
-        <div id="monthAgenda"></div>
-    </div>
+    <div class="agenda-section"><div class="agenda-title">Vaše rodinné oslavy:</div><div id="monthAgenda"></div></div>
     <div class="month-grid" id="mainGrid"></div>
     <div class="stats-section">
-      <div class="agenda-title">Náklady dle typu (1000 Kč/ks)</div>
+      <div class="agenda-title" style="margin-bottom:10px;">Přehled nákladů</div>
       <div class="stats-bars" id="statsBars"></div>
-      <div style="display:flex; gap:10px; margin-top:15px; font-size:10px; font-weight:bold; justify-content:center;">
+      <div style="display:flex; gap:10px; margin-top:15px; font-size:9px; font-weight:bold; justify-content:center; opacity: 0.8;">
         <span style="color:var(--clr-bday)">● Nar.</span>
         <span style="color:var(--clr-nameday)">● Svát.</span>
         <span style="color:var(--clr-anniv)">● Výr.</span>
       </div>
     </div>
   </section>
-  <section id="yearSection" class="view-section">
-    <div class="year-scroll-list" id="yearScrollList"></div>
-  </section>
+  <section id="yearSection" class="view-section"><div class="year-scroll-list" id="yearScrollList"></div></section>
 </main>
 
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this) closeModal()">
@@ -121,11 +125,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(10, 15, 26, 0.
     <div id="editForm" style="border-top:1px solid var(--border); padding-top:20px; margin-top:20px;">
       <input type="text" id="addName" placeholder="Jméno (např. Jirka)">
       <div style="display:flex; gap:12px;">
-        <select id="addType" style="flex:2">
-            <option value="bday">🎂 Narozeniny</option>
-            <option value="nameday">🌸 Svátek</option>
-            <option value="anniv">💍 Výročí</option>
-        </select>
+        <select id="addType" style="flex:2"><option value="bday">🎂 Narozeniny</option><option value="nameday">🌸 Svátek</option><option value="anniv">💍 Výročí</option></select>
         <input type="number" id="addYear" placeholder="Rok narození" style="flex:1">
       </div>
       <button class="btn-nav" style="width:100%; padding:20px; background:var(--gold); color:#000; border:none; border-radius:18px; font-size:16px;" id="saveBtn">PŘIDAT OSLAVU</button>
@@ -229,11 +229,11 @@ function updateStats() {
             <div class="segment" style="height:${(s.bday/s.total)*100}%; background:var(--clr-bday)"></div>
             <div class="segment" style="height:${(s.nameday/s.total)*100}%; background:var(--clr-nameday)"></div>
             <div class="segment" style="height:${(s.anniv/s.total)*100}%; background:var(--clr-anniv)"></div>
-        ` : `<div class="segment" style="height:100%; background:rgba(255,255,255,0.1)"></div>`;
-        return `<div class="bar-container" onclick="curMonth=${i}; render();">
+        ` : `<div class="segment" style="height:100%; background:rgba(255,255,255,0.05)"></div>`;
+        return `<div class="bar-container ${isActive ? 'active' : ''}" onclick="curMonth=${i}; render();">
                 ${s.total > 0 ? `<div class="bar-value">${s.total * 1000}.-</div>` : ''}
-                <div class="bar-stack" style="height:${totalHeight}%; opacity:${isActive ? 1 : 0.4}">${segments}</div>
-                <div class="bar-label" style="color:${isActive ? 'var(--gold)' : 'var(--muted)'}">${shortMonths[i]}</div>
+                <div class="bar-stack" style="height:${totalHeight}%; opacity:${isActive ? 1 : 0.5}">${segments}</div>
+                <div class="bar-month-box">${shortMonths[i]}</div>
             </div>`;
     }).join('');
 }
@@ -259,16 +259,12 @@ function render() {
                 <span style="font-weight:800;">${cats[ev.type].i} ${ev.n}${age}</span>
             </div>`;
         });
-        grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})">
-            <div class="day-num">${d}</div><div class="symbols">${symbols}</div>
-        </div>`;
+        grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})"><div class="day-num">${d}</div><div class="symbols">${symbols}</div></div>`;
     }
     document.getElementById('monthAgenda').innerHTML = monthAgendaHtml || "<div style='color:var(--muted); padding:10px;'>Žádné oslavy.</div>";
     for(let k in events) events[k].forEach(e => names.add(e.n));
     const searchDiv = document.getElementById('personSearch'); searchDiv.innerHTML = "";
     Array.from(names).sort().forEach(n => searchDiv.innerHTML += `<div class="person-box" onclick="openPersonFilter('${n}')">${n}</div>`);
-    
-    // --- ÚPRAVA ROČNÍHO ZOBRAZENÍ: RÁMEČEK A VYKŘIČNÍK ---
     const yearList = document.getElementById('yearScrollList'); yearList.innerHTML = "";
     for(let m=0; m<12; m++) {
         let mg = ""; let yrEvs = "";
@@ -278,11 +274,8 @@ function render() {
             const k = `${m}-${d}`, hasEv = events[k];
             let cellStyle = "font-size:10px; padding:3px; position:relative;";
             let dayContent = d;
-            
             if(hasEv) {
-                // Barevná linka (border) kolem dne podle první události
                 cellStyle += `border: 2px solid ${cats[hasEv[0].type].c}; border-radius:4px; font-weight:bold;`;
-                // Ikona vykřičníku k číslu
                 dayContent = `${d}<span style="color:${cats[hasEv[0].type].c}; font-size:10px; margin-left:1px;">!</span>`;
                 hasEv.forEach(ev => { yrEvs += `<div style="font-size:12px; margin-bottom:2px;"><strong>${d}.</strong> ${ev.n}</div>`; });
             }

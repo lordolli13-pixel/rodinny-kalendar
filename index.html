@@ -3,143 +3,101 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
-<title>Family Calendar Pro 2026</title>
+<title>Family Calendar Slate Pro</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2F4F4F">
+<link rel="apple-touch-icon" href="icon.png">
 <style>
 :root {
-  --bg: #0a0f1a;
-  --panel: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.12);
-  --gold: #d99a3f;
-  --text: #ffffff;
-  --muted: #9aa6b6;
-  --clr-bday: #f59e0b;
-  --clr-nameday: #10b981;
-  --clr-anniv: #ec4899;
-  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  --bg: #2F4F4F; --panel: #263f3f; --border: #1c2e2e; --gold: #fef5e7; --text: #fef5e7;       
+  --muted: #8ca2a2; --clr-bday: #ffab40; --clr-nameday: #98ee99; --clr-anniv: #ff80ab;  
+  --day-bg: #365a5a; --header-bg: rgba(47, 79, 79, 0.96);
+  font-family: 'Inter', sans-serif;
 }
-
-body { margin:0; min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 50px; }
-
-header { position: sticky; top: 0; z-index: 100; background: rgba(10, 15, 26, 0.98); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 12px 16px; }
+[data-theme="light"] {
+  --bg: #e8e2d2; --panel: #dbd4c3; --border: #c4bcab; --gold: #8d6228; --text: #3d3a33;
+  --muted: #7a7466; --day-bg: #e2dcc9; --header-bg: rgba(232, 226, 210, 0.98);
+}
+body { margin:0; min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 50px; transition: background 0.4s; }
+header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 16px; }
 .brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .brand .title { font-weight: 900; font-size: 18px; color: var(--gold); letter-spacing: 1px; }
-
-.view-switch { display: flex; background: rgba(255,255,255,0.05); border-radius: 14px; padding: 4px; margin-bottom: 12px; }
-.view-switch button { flex: 1; border: none; background: transparent; color: var(--muted); padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; transition: 0.3s; }
-.view-switch button.active { background: var(--gold); color: #000; }
-
+.theme-toggle { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 12px; cursor: pointer; font-size: 18px; }
+.view-switch { display: flex; background: var(--panel); border-radius: 14px; padding: 4px; margin-bottom: 12px; border: 1px solid var(--border); }
+.view-switch button { flex: 1; border: none; background: transparent; color: var(--muted); padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; }
+.view-switch button.active { background: var(--gold); color: #1c2e2e; }
 .person-search { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-.person-search::-webkit-scrollbar { display: none; }
-.person-box { background: linear-gradient(135deg, rgba(217, 154, 63, 0.15), rgba(217, 154, 63, 0.05)); border: 1px solid rgba(217, 154, 63, 0.5); color: var(--gold); padding: 10px 20px; border-radius: 20px; white-space: nowrap; font-size: 14px; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.2s; }
-
+.person-box { background: var(--panel); border: 1.5px solid var(--gold); color: var(--gold); padding: 8px 18px; border-radius: 20px; white-space: nowrap; font-size: 13px; font-weight: 800; cursor: pointer; }
 .controls { display: flex; gap: 8px; margin-top: 5px; }
-.select { background: var(--panel); border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 12px; flex: 1; font-size: 15px; appearance: none; }
-.btn-nav { background: var(--panel); border: 1px solid var(--border); color: #fff; padding: 10px 18px; border-radius: 12px; font-weight: bold; }
-
+.select { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; flex: 1; font-size: 15px; appearance: none; }
+.btn-nav { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 10px 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 .main-content { padding: 16px; }
 .view-section { display: none; }
 .view-section.active { display: block; }
-
-.agenda-section { margin-bottom: 25px; max-height: 180px; overflow-y: auto; padding-right: 5px; }
-.agenda-title { font-size: 12px; font-weight: 800; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; }
-.ev-row { background: var(--panel); padding: 12px 14px; border-radius: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; border-left: 5px solid transparent; }
-
-.month-label { font-size: 26px; font-weight: 900; margin-bottom: 12px; color: #fff; }
-.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; }
-.weekday { background: #111827; font-size: 11px; color: var(--gold); text-align: center; padding: 12px 0; font-weight: 800; }
-.day { background: #0a0f1a; min-height: 80px; padding: 10px 4px; position: relative; display: flex; flex-direction: column; align-items: center; }
-.day.today { background: rgba(217, 154, 63, 0.15); box-shadow: inset 0 0 0 1.5px var(--gold); }
-.day-num { font-weight: 900; font-size: 17px; margin-bottom: 5px; }
-
-.symbols { display: flex; gap: 3px; width: 90%; height: 12px; justify-content: center; margin-top: auto; padding-bottom: 10px; }
-.symbol-block { flex: 1; height: 100%; border-radius: 4px; box-shadow: 0 0 10px rgba(0,0,0,0.5); max-width: 15px; }
-
-/* --- RESPONZIVNÍ GRAF S BOXÍKY --- */
-.stats-section { margin-top: 30px; background: var(--panel); border-radius: 20px; padding: 15px 8px; border: 1px solid var(--border); }
-.stats-bars { display: flex; align-items: flex-end; gap: 2px; height: 140px; margin-top: 40px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
-.bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; cursor: pointer; position: relative; }
-.bar-stack { width: 85%; display: flex; flex-direction: column-reverse; border-radius: 3px 3px 0 0; overflow: hidden; transition: 0.3s; min-height: 2px; }
+.agenda-title { font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+.ev-row { background: var(--panel); padding: 12px 14px; border-radius: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); border-left: 5px solid transparent; }
+.month-label { font-size: 24px; font-weight: 900; margin-bottom: 15px; }
+.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border-radius: 20px; overflow: hidden; }
+.weekday { background: var(--panel); font-size: 10px; color: var(--gold); text-align: center; padding: 10px 0; font-weight: 800; }
+.day { background: var(--day-bg); min-height: 75px; padding: 8px 4px; position: relative; display: flex; flex-direction: column; align-items: center; }
+.day.today { background: rgba(254, 245, 231, 0.1); box-shadow: inset 0 0 0 2px var(--gold); }
+.day-num { font-weight: 900; font-size: 16px; }
+.symbols { display: flex; gap: 2px; width: 90%; height: 10px; justify-content: center; margin-top: auto; padding-bottom: 8px; }
+.symbol-block { flex: 1; height: 100%; border-radius: 3px; max-width: 12px; }
+.stats-section { margin-top: 25px; background: var(--panel); border-radius: 22px; padding: 15px; border: 1px solid var(--border); }
+.stats-bars { display: flex; align-items: flex-end; gap: 4px; height: 120px; margin-top: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+.bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; cursor: pointer; }
+.bar-count { font-size: 10px; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+.bar-stack { width: 85%; display: flex; flex-direction: column-reverse; border-radius: 4px 4px 0 0; overflow: hidden; min-height: 2px; }
 .segment { width: 100%; }
-
-.bar-value { 
-  position: absolute; top: -32px; font-size: 9px; font-weight: 900; color: #fff; 
-  transform: rotate(-45deg); white-space: nowrap; pointer-events: none;
-}
-
-/* Malé boxíky pro názvy měsíců */
-.bar-month-box {
-  margin-top: 10px; width: 95%; padding: 4px 0; border-radius: 6px;
-  background: rgba(255,255,255,0.03); border: 1px solid transparent;
-  font-size: 8px; font-weight: 900; color: var(--muted);
-  text-align: center; text-transform: uppercase;
-}
-.bar-container.active .bar-month-box {
-  background: rgba(217, 154, 63, 0.1); border-color: var(--gold); color: var(--gold);
-}
-
-.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 1000; display: none; align-items: flex-end; }
+.bar-month-box { margin-top: 8px; font-size: 9px; font-weight: 900; color: var(--muted); }
+.bar-container.active .bar-month-box { color: var(--gold); }
+.year-month-card { background: var(--panel); padding: 15px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 20px; cursor: pointer; }
+.year-event-list { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; line-height: 1.6; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: flex-end; }
 .modal-bg.show { display: flex; }
-.modal { background: #161b26; width: 100%; border-radius: 35px 35px 0 0; padding: 30px 25px; box-sizing: border-box; border-top: 4px solid var(--gold); }
-.modal input, .modal select { width: 100%; margin-bottom: 12px; padding: 18px; border-radius: 16px; background: #000; border: 1px solid var(--border); color: #fff; font-size: 16px; }
-
-.year-month-card { background: var(--panel); padding: 20px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+.modal { background: var(--panel); width: 100%; border-radius: 30px 30px 0 0; padding: 25px; box-sizing: border-box; border-top: 4px solid var(--gold); max-height: 90vh; overflow-y: auto; color: var(--text); }
+.modal input, .modal select { width: 100%; margin-bottom: 10px; padding: 15px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 16px; box-sizing: border-box; }
+.btn-export { background: #4a90e2; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 11px; margin-top: 5px; width: 100%; cursor: pointer; }
 </style>
 </head>
-<body>
-
+<body data-theme="dark">
 <header>
-  <div class="brand"><div class="title">FAMILY CALENDAR</div><button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#000; border:none; padding:10px 20px;">DNES</button></div>
+  <div class="brand"><div class="title">FAMILY CALENDAR</div>
+    <div style="display:flex; gap:10px;"><button class="theme-toggle" id="themeToggle">🌓</button><button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#1c2e2e; border:none;">DNES</button></div>
+  </div>
   <div class="view-switch"><button id="btnMonthView" class="active">MĚSÍC</button><button id="btnYearView">ROK</button></div>
   <div class="person-search" id="personSearch"></div>
   <div class="controls" id="monthControls">
-    <button class="btn-nav" id="prevMonth">◀</button>
-    <select id="monthSelect" class="select"></select>
-    <select id="yearSelect" class="select"></select>
-    <button class="btn-nav" id="nextMonth">▶</button>
+    <button class="btn-nav" id="prevMonth">◀</button><select id="monthSelect" class="select"></select><select id="yearSelect" class="select"></select><button class="btn-nav" id="nextMonth">▶</button>
   </div>
 </header>
-
 <main class="main-content">
   <section id="monthSection" class="view-section active">
     <div id="monthLabel" class="month-label">—</div>
-    <div class="agenda-section"><div class="agenda-title">Vaše rodinné oslavy:</div><div id="monthAgenda"></div></div>
+    <div class="agenda-section"><div class="agenda-title">Oslavy tento měsíc:</div><div id="monthAgenda"></div></div>
     <div class="month-grid" id="mainGrid"></div>
-    <div class="stats-section">
-      <div class="agenda-title" style="margin-bottom:10px;">Přehled nákladů</div>
-      <div class="stats-bars" id="statsBars"></div>
-      <div style="display:flex; gap:10px; margin-top:15px; font-size:9px; font-weight:bold; justify-content:center; opacity: 0.8;">
-        <span style="color:var(--clr-bday)">● Nar.</span>
-        <span style="color:var(--clr-nameday)">● Svát.</span>
-        <span style="color:var(--clr-anniv)">● Výr.</span>
-      </div>
-    </div>
+    <div class="stats-section"><div class="agenda-title">Počty událostí v měsících:</div><div class="stats-bars" id="statsBars"></div></div>
   </section>
-  <section id="yearSection" class="view-section"><div class="year-scroll-list" id="yearScrollList"></div></section>
+  <section id="yearSection" class="view-section"><div id="yearScrollList"></div></section>
 </main>
-
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this) closeModal()">
-  <div class="modal">
-    <div style="width: 60px; height: 6px; background: var(--border); border-radius: 10px; margin: -10px auto 25px;"></div>
-    <h3 id="modalTitle" style="color:var(--gold); margin:0 0 20px 0; text-align:center; font-size: 24px;">Detail dne</h3>
-    <div id="eventList"></div>
-    <div id="editForm" style="border-top:1px solid var(--border); padding-top:20px; margin-top:20px;">
-      <input type="text" id="addName" placeholder="Jméno (např. Jirka)">
-      <div style="display:flex; gap:12px;">
-        <select id="addType" style="flex:2"><option value="bday">🎂 Narozeniny</option><option value="nameday">🌸 Svátek</option><option value="anniv">💍 Výročí</option></select>
-        <input type="number" id="addYear" placeholder="Rok narození" style="flex:1">
-      </div>
-      <button class="btn-nav" style="width:100%; padding:20px; background:var(--gold); color:#000; border:none; border-radius:18px; font-size:16px;" id="saveBtn">PŘIDAT OSLAVU</button>
-    </div>
-    <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:25px; font-weight:bold; font-size:16px;">ZAVŘÍT</button>
+  <div class="modal"><h3 id="modalTitle" style="color:var(--gold); margin-top:0;">Detail dne</h3><div id="eventList"></div>
+    <div id="editForm"><input type="text" id="addName" placeholder="Jméno">
+      <div style="display:flex; gap:10px;"><select id="addType" style="flex:2"><option value="bday">🎂 Narozeniny</option><option value="nameday">🌸 Svátek</option><option value="anniv">💍 Výročí</option></select>
+      <input type="number" id="addYear" placeholder="Rok" style="flex:1"></div>
+      <button class="btn-nav" style="width:100%; padding:18px; background:var(--gold); color:#1c2e2e; border:none; border-radius:15px; font-weight:bold;" id="saveBtn">ULOŽIT</button>
+    </div><button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:20px; font-weight:bold;">ZAVŘÍT</button>
   </div>
 </div>
-
 <script>
-const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"];
-const shortMonths = ["Led","Úno","Bře","Dub","Kvě","Čer","Čvc","Srp","Zář","Říj","Lis","Pro"];
-const cats = { bday: { c: 'var(--clr-bday)', i: '🎂' }, nameday: { c: 'var(--clr-nameday)', i: '🌸' }, anniv: { c: 'var(--clr-anniv)', i: '💍' } };
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"], shortMonths = ["Led","Úno","Bře","Dub","Kvě","Čer","Čvc","Srp","Zář","Říj","Lis","Pro"];
+const cats = { bday: { c: 'var(--clr-bday)', i: '🎂', t: 'Narozeniny' }, nameday: { c: 'var(--clr-nameday)', i: '🌸', t: 'Svátek' }, anniv: { c: 'var(--clr-anniv)', i: '💍', t: 'Výročí' } };
+let curYear = 2026, curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_final_slate_v3') || '{}'), editKey = null;
 
-let curYear = 2026, curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_v17') || '{}'), editKey = null;
+document.getElementById('themeToggle').onclick = () => { const b = document.body; const nt = b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; b.setAttribute('data-theme', nt); localStorage.setItem('cal_theme_pref', nt); };
+if(localStorage.getItem('cal_theme_pref') === 'light') document.body.setAttribute('data-theme', 'light');
 
 function init() {
     months.forEach((m,i) => document.getElementById('monthSelect').innerHTML += `<option value="${i}">${m}</option>`);
@@ -154,140 +112,84 @@ function init() {
     document.getElementById('saveBtn').onclick = saveEvent;
     render();
 }
-
-function switchView(view) {
-    document.getElementById('btnMonthView').classList.toggle('active', view==='month');
-    document.getElementById('btnYearView').classList.toggle('active', view==='year');
-    document.getElementById('monthSection').classList.toggle('active', view==='month');
-    document.getElementById('yearSection').classList.toggle('active', view==='year');
-}
-
+function switchView(v) { document.getElementById('btnMonthView').classList.toggle('active', v==='month'); document.getElementById('btnYearView').classList.toggle('active', v==='year'); document.getElementById('monthSection').classList.toggle('active', v==='month'); document.getElementById('yearSection').classList.toggle('active', v==='year'); }
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
-
 function openDay(m, d) {
-    editKey = `${m}-${d}`;
-    document.getElementById('modalTitle').innerText = `${d}. ${months[m]} ${curYear}`;
-    document.getElementById('editForm').style.display = "block";
+    editKey = `${m}-${d}`; document.getElementById('modalTitle').innerText = `${d}. ${months[m]} ${curYear}`; document.getElementById('editForm').style.display = "block";
     const list = document.getElementById('eventList'); list.innerHTML = "";
-    (events[editKey] || []).forEach((ev, i) => {
-        const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} let)` : "";
-        list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:16px; border-radius:14px; margin-bottom:10px; border-left:6px solid ${cats[ev.type].c}">
-            <span style="font-weight:900; font-size:16px;">${cats[ev.type].i} ${ev.n}${age}</span>
-            <button onclick="delEv('${editKey}',${i})" style="color:#ff4444; background:rgba(255,0,0,0.15); border:none; padding:10px 15px; border-radius:10px; font-weight:bold;">Smazat</button>
-        </div>`;
+    (events[editKey] || []).forEach((ev, i) => { const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} let)` : "";
+        list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}; flex-direction:column; align-items:flex-start;">
+            <div style="display:flex; width:100%; justify-content:space-between; align-items:center;"><span style="font-weight:900;">${cats[ev.type].i} ${ev.n}${age}</span><button onclick="delEv('${editKey}',${i})" style="color:#ff5252; background:none; border:none; font-weight:bold; font-size:20px;">×</button></div>
+            <button class="btn-export" onclick="exportICS('${ev.n}','${ev.type}',${d},${m})">🔔 PŘIDAT PŘIPOMÍNKU</button></div>`;
     });
     document.getElementById('modalBg').classList.add('show');
 }
-
+function exportICS(n, t, d, m) {
+    const dt = curYear + (m+1).toString().padStart(2,'0') + d.toString().padStart(2,'0');
+    const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART;VALUE=DATE:${dt}`,`SUMMARY:${cats[t].i} ${n}`,'RRULE:FREQ=YEARLY','BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',`DESCRIPTION:Zítra: ${n}`,'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], {type:'text/calendar'})); a.download = `${n}.ics`; a.click();
+}
+function saveEvent() {
+    const n = document.getElementById('addName').value.trim(); if(!n) return;
+    if(!events[editKey]) events[editKey] = []; events[editKey].push({ n, type: document.getElementById('addType').value, y: parseInt(document.getElementById('addYear').value) || null });
+    localStorage.setItem('family_cal_final_slate_v3', JSON.stringify(events)); document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
+}
+function delEv(k, i) { if(confirm("Smazat?")) { events[k].splice(i,1); if(!events[k].length) delete events[k]; localStorage.setItem('family_cal_final_slate_v3', JSON.stringify(events)); render(); openDay(...k.split('-')); } }
 function openPersonFilter(name) {
-    document.getElementById('modalTitle').innerText = `Vše pro: ${name}`;
-    document.getElementById('editForm').style.display = "none";
+    document.getElementById('modalTitle').innerText = `Vše pro: ${name}`; document.getElementById('editForm').style.display = "none";
     const list = document.getElementById('eventList'); list.innerHTML = "";
-    for (let k in events) {
-        events[k].forEach(ev => {
-            if(ev.n === name) {
-                const [m, d] = k.split('-');
-                list.innerHTML += `<div style="padding:15px; border-bottom:1px solid var(--border); font-size:16px;"><strong>${d}. ${months[m]}</strong>: ${cats[ev.type].i} ${ev.type === 'bday' ? 'Narozeniny' : ev.type === 'anniv' ? 'Výročí' : 'Svátek'}</div>`;
-            }
-        });
-    }
+    for (let k in events) { events[k].forEach(ev => { if(ev.n === name) { const [m, d] = k.split('-'); list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}"><strong>${d}. ${months[m]}</strong>: ${cats[ev.type].i} ${cats[ev.type].t}</div>`; } }); }
     document.getElementById('modalBg').classList.add('show');
 }
-
-function saveEvent() {
-    const n = document.getElementById('addName').value.trim();
-    if(!n) return;
-    if(!events[editKey]) events[editKey] = [];
-    events[editKey].push({ n, type: document.getElementById('addType').value, y: parseInt(document.getElementById('addYear').value) || null });
-    localStorage.setItem('family_cal_v17', JSON.stringify(events));
-    document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
-}
-
-function delEv(key, i) {
-    if(confirm("Opravdu smazat?")) {
-        events[key].splice(i,1); if(!events[key].length) delete events[key]; 
-        localStorage.setItem('family_cal_v17', JSON.stringify(events)); 
-        openDay(...key.split('-')); render();
-    }
-}
-
-function updateStats() {
-    const monthlyStats = Array.from({ length: 12 }, () => ({ bday: 0, nameday: 0, anniv: 0, total: 0 }));
-    for (let k in events) {
-        const m = parseInt(k.split('-')[0]);
-        if (m >= 0 && m < 12) {
-            events[k].forEach(ev => { monthlyStats[m][ev.type]++; monthlyStats[m].total++; });
-        }
-    }
-    const maxVal = Math.max(...monthlyStats.map(s => s.total));
-    const scale = maxVal > 0 ? maxVal : 1; 
-    const container = document.getElementById('statsBars');
-    container.innerHTML = monthlyStats.map((s, i) => {
-        const totalHeight = s.total > 0 ? (s.total / scale) * 100 : 2;
-        const isActive = i === curMonth;
-        const segments = s.total > 0 ? `
-            <div class="segment" style="height:${(s.bday/s.total)*100}%; background:var(--clr-bday)"></div>
-            <div class="segment" style="height:${(s.nameday/s.total)*100}%; background:var(--clr-nameday)"></div>
-            <div class="segment" style="height:${(s.anniv/s.total)*100}%; background:var(--clr-anniv)"></div>
-        ` : `<div class="segment" style="height:100%; background:rgba(255,255,255,0.05)"></div>`;
-        return `<div class="bar-container ${isActive ? 'active' : ''}" onclick="curMonth=${i}; render();">
-                ${s.total > 0 ? `<div class="bar-value">${s.total * 1000}.-</div>` : ''}
-                <div class="bar-stack" style="height:${totalHeight}%; opacity:${isActive ? 1 : 0.5}">${segments}</div>
-                <div class="bar-month-box">${shortMonths[i]}</div>
-            </div>`;
-    }).join('');
-}
-
 function render() {
-    document.getElementById('monthSelect').value = curMonth;
-    document.getElementById('yearSelect').value = curYear;
-    document.getElementById('monthLabel').innerText = `${months[curMonth]} ${curYear}`;
-    const grid = document.getElementById('mainGrid'); grid.innerHTML = "";
-    ["Po","Út","St","Čt","Pá","So","Ne"].forEach(w => grid.innerHTML += `<div class="weekday">${w}</div>`);
+    document.getElementById('monthSelect').value = curMonth; document.getElementById('yearSelect').value = curYear; document.getElementById('monthLabel').innerText = `${months[curMonth]} ${curYear}`;
+    const grid = document.getElementById('mainGrid'); grid.innerHTML = ""; ["Po","Út","St","Čt","Pá","So","Ne"].forEach(w => grid.innerHTML += `<div class="weekday">${w}</div>`);
     const first = (new Date(curYear, curMonth, 1).getDay() || 7) - 1, days = new Date(curYear, curMonth + 1, 0).getDate();
     for(let i=0; i<first; i++) grid.innerHTML += `<div></div>`;
-    let monthAgendaHtml = ""; const names = new Set();
+    let agendaHtml = ""; const names = new Set();
     for(let d=1; d<=days; d++) {
         const k = `${curMonth}-${d}`, evs = events[k] || [];
         const isToday = (d===new Date().getDate() && curMonth===new Date().getMonth() && curYear===new Date().getFullYear());
-        let symbols = ""; 
-        evs.forEach(ev => { 
-            symbols += `<div class="symbol-block" style="background:${cats[ev.type].c}"></div>`; 
-            const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} l.)` : "";
-            monthAgendaHtml += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}" onclick="openDay(${curMonth},${d})">
-                <strong style="color:var(--gold); min-width:30px;">${d}.</strong>
-                <span style="font-weight:800;">${cats[ev.type].i} ${ev.n}${age}</span>
-            </div>`;
-        });
-        grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})"><div class="day-num">${d}</div><div class="symbols">${symbols}</div></div>`;
+        let syms = ""; evs.forEach(ev => { syms += `<div class="symbol-block" style="background:${cats[ev.type].c}"></div>`; const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} l.)` : ""; agendaHtml += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}" onclick="openDay(${curMonth},${d})"><strong>${d}.</strong> ${cats[ev.type].i} ${ev.n}${age}</div>`; });
+        grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})"><div class="day-num">${d}</div><div class="symbols">${syms}</div></div>`;
     }
-    document.getElementById('monthAgenda').innerHTML = monthAgendaHtml || "<div style='color:var(--muted); padding:10px;'>Žádné oslavy.</div>";
+    document.getElementById('monthAgenda').innerHTML = agendaHtml || "<div style='color:var(--muted); padding:10px;'>Žádné oslavy...</div>";
+    
+    // Graf s "cenami" (počty)
+    const stats = Array.from({length:12}, () => ({total:0, b:0, n:0, a:0}));
+    for(let k in events) { const m = parseInt(k.split('-')[0]); events[k].forEach(e => { stats[m].total++; stats[m][e.type==='bday'?'b':e.type==='nameday'?'n':'a']++; }); }
+    const max = Math.max(...stats.map(s=>s.total)) || 1;
+    document.getElementById('statsBars').innerHTML = stats.map((s,i) => `
+        <div class="bar-container ${i===curMonth?'active':''}" onclick="curMonth=${i}; render();">
+            <div class="bar-count">${s.total > 0 ? s.total : ''}</div>
+            <div class="bar-stack" style="height:${(s.total/max)*85}%">
+                <div class="segment" style="height:${(s.b/s.total)*100}%; background:var(--clr-bday)"></div>
+                <div class="segment" style="height:${(s.n/s.total)*100}%; background:var(--clr-nameday)"></div>
+                <div class="segment" style="height:${(s.a/s.total)*100}%; background:var(--clr-anniv)"></div>
+            </div>
+            <div class="bar-month-box">${shortMonths[i]}</div>
+        </div>`).join('');
+
     for(let k in events) events[k].forEach(e => names.add(e.n));
     const searchDiv = document.getElementById('personSearch'); searchDiv.innerHTML = "";
     Array.from(names).sort().forEach(n => searchDiv.innerHTML += `<div class="person-box" onclick="openPersonFilter('${n}')">${n}</div>`);
-    const yearList = document.getElementById('yearScrollList'); yearList.innerHTML = "";
+
+    // Detailní Roční výpis
+    const yl = document.getElementById('yearScrollList'); yl.innerHTML = "";
     for(let m=0; m<12; m++) {
-        let mg = ""; let yrEvs = "";
-        const md = new Date(curYear, m+1, 0).getDate(), mf = (new Date(curYear, m, 1).getDay() || 7) - 1;
+        let mg = ""; let mEvents = ""; const md = new Date(curYear, m+1, 0).getDate(), mf = (new Date(curYear, m, 1).getDay() || 7) - 1;
         for(let i=0; i<mf; i++) mg += `<div></div>`;
         for(let d=1; d<=md; d++) {
-            const k = `${m}-${d}`, hasEv = events[k];
-            let cellStyle = "font-size:10px; padding:3px; position:relative;";
-            let dayContent = d;
-            if(hasEv) {
-                cellStyle += `border: 2px solid ${cats[hasEv[0].type].c}; border-radius:4px; font-weight:bold;`;
-                dayContent = `${d}<span style="color:${cats[hasEv[0].type].c}; font-size:10px; margin-left:1px;">!</span>`;
-                hasEv.forEach(ev => { yrEvs += `<div style="font-size:12px; margin-bottom:2px;"><strong>${d}.</strong> ${ev.n}</div>`; });
-            }
-            mg += `<div style="${cellStyle}">${dayContent}</div>`;
+            const k = `${m}-${d}`, has = events[k];
+            mg += `<div style="font-size:9px; padding:2px; ${has?`background:${cats[has[0].type].c}; color:#000; border-radius:3px; font-weight:bold;`:''}">${d}</div>`;
+            if(has) has.forEach(e => { const age = (e.type==='bday' && e.y) ? ` (${curYear-e.y} let)` : ""; mEvents += `<div><b>${d}.</b> ${cats[e.type].i} ${e.n}${age}</div>`; });
         }
-        yearList.innerHTML += `<div class="year-month-card" onclick="curMonth=${m}; switchView('month'); render();">
-            <div style="font-weight:900; color:var(--gold); margin-bottom:10px; font-size:20px;">${months[m]}</div>
-            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center;">${mg}</div>
-            <div style="margin-top:10px; border-top:1px solid var(--border); padding-top:8px;">${yrEvs}</div>
+        yl.innerHTML += `<div class="year-month-card" onclick="curMonth=${m}; switchView('month'); render();">
+            <div style="font-weight:900; color:var(--gold); border-bottom:1px solid var(--border); padding-bottom:5px; margin-bottom:10px; display:flex; justify-content:space-between;"><span>${months[m]}</span><span style="opacity:0.5">${stats[m].total}x</span></div>
+            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; text-align:center; margin-bottom:10px;">${mg}</div>
+            <div class="year-event-list">${mEvents || "<span style='opacity:0.3'>Žádné události</span>"}</div>
         </div>`;
     }
-    updateStats();
 }
 init();
 </script>

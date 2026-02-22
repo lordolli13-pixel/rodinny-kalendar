@@ -10,61 +10,62 @@
 <style>
 :root {
   --bg: #2F4F4F; --panel: #263f3f; --border: #1c2e2e; --gold: #fef5e7; --text: #fef5e7;       
-  --muted: #8ca2a2; --clr-bday: #ffab40; --clr-nameday: #98ee99; --clr-anniv: #ff80ab;  
-  --day-bg: #365a5a; --header-bg: rgba(47, 79, 79, 0.96);
-  font-family: 'Inter', sans-serif;
+  --muted: #a3b8b8; --clr-bday: #ffab40; --clr-nameday: #98ee99; --clr-anniv: #ff80ab;  
+  --day-bg: #365a5a; --header-bg: rgba(47, 79, 79, 0.98);
+  font-family: 'Inter', -apple-system, sans-serif;
 }
 [data-theme="light"] {
-  --bg: #e8e2d2; --panel: #dbd4c3; --border: #c4bcab; --gold: #8d6228; --text: #3d3a33;
-  --muted: #7a7466; --day-bg: #e2dcc9; --header-bg: rgba(232, 226, 210, 0.98);
+  --bg: #e8e2d2; --panel: #dbd4c3; --border: #c4bcab; --gold: #8d6228; --text: #1a1917;
+  --muted: #5c5850; --day-bg: #f2ede0; --header-bg: rgba(232, 226, 210, 0.98);
 }
-body { margin:0; min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 50px; transition: background 0.4s; }
-header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 16px; }
-.brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.brand .title { font-weight: 900; font-size: 18px; color: var(--gold); letter-spacing: 1px; }
-.theme-toggle { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 12px; cursor: pointer; font-size: 18px; }
-.view-switch { display: flex; background: var(--panel); border-radius: 14px; padding: 4px; margin-bottom: 12px; border: 1px solid var(--border); }
-.view-switch button { flex: 1; border: none; background: transparent; color: var(--muted); padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; }
+body { margin:0; min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 60px; transition: background 0.4s; font-size: 18px; }
+header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); backdrop-filter: blur(15px); border-bottom: 2px solid var(--border); padding: 16px; }
+.brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.brand .title { font-weight: 900; font-size: 22px; color: var(--gold); letter-spacing: 1.5px; }
+.theme-toggle { background: var(--panel); border: 1.5px solid var(--border); color: var(--text); padding: 10px 15px; border-radius: 12px; cursor: pointer; font-size: 22px; }
+.view-switch { display: flex; background: var(--panel); border-radius: 16px; padding: 5px; margin-bottom: 15px; border: 1.5px solid var(--border); }
+.view-switch button { flex: 1; border: none; background: transparent; color: var(--muted); padding: 14px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; }
 .view-switch button.active { background: var(--gold); color: #1c2e2e; }
-.person-search { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-.person-box { background: var(--panel); border: 1.5px solid var(--gold); color: var(--gold); padding: 8px 18px; border-radius: 20px; white-space: nowrap; font-size: 13px; font-weight: 800; cursor: pointer; }
-.controls { display: flex; gap: 8px; margin-top: 5px; }
-.select { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; flex: 1; font-size: 15px; appearance: none; }
-.btn-nav { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 10px 18px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+.person-search { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+.person-box { background: var(--panel); border: 2px solid var(--gold); color: var(--gold); padding: 10px 22px; border-radius: 25px; white-space: nowrap; font-size: 16px; font-weight: 800; cursor: pointer; }
+.controls { display: flex; gap: 10px; margin-top: 10px; }
+.select { background: var(--panel); border: 2px solid var(--border); color: var(--text); padding: 14px; border-radius: 14px; flex: 1; font-size: 18px; font-weight: bold; appearance: none; }
+.btn-nav { background: var(--panel); border: 2px solid var(--border); color: var(--text); padding: 12px 22px; border-radius: 14px; font-weight: 900; font-size: 18px; cursor: pointer; }
 .main-content { padding: 16px; }
 .view-section { display: none; }
 .view-section.active { display: block; }
-.agenda-title { font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
-.ev-row { background: var(--panel); padding: 12px 14px; border-radius: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); border-left: 5px solid transparent; }
-.month-label { font-size: 24px; font-weight: 900; margin-bottom: 15px; }
-.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border-radius: 20px; overflow: hidden; }
-.weekday { background: var(--panel); font-size: 10px; color: var(--gold); text-align: center; padding: 10px 0; font-weight: 800; }
-.day { background: var(--day-bg); min-height: 75px; padding: 8px 4px; position: relative; display: flex; flex-direction: column; align-items: center; }
-.day.today { background: rgba(254, 245, 231, 0.1); box-shadow: inset 0 0 0 2px var(--gold); }
-.day-num { font-weight: 900; font-size: 16px; }
-.symbols { display: flex; gap: 2px; width: 90%; height: 10px; justify-content: center; margin-top: auto; padding-bottom: 8px; }
-.symbol-block { flex: 1; height: 100%; border-radius: 3px; max-width: 12px; }
-.stats-section { margin-top: 25px; background: var(--panel); border-radius: 22px; padding: 15px; border: 1px solid var(--border); }
-.stats-bars { display: flex; align-items: flex-end; gap: 4px; height: 120px; margin-top: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+.agenda-title { font-size: 14px; font-weight: 900; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1.5px; }
+.ev-row { background: var(--panel); padding: 16px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; border: 1.5px solid var(--border); border-left: 8px solid transparent; font-size: 18px; font-weight: 600; }
+.month-label { font-size: 32px; font-weight: 900; margin-bottom: 20px; color: var(--gold); }
+.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; background: var(--border); border-radius: 24px; overflow: hidden; border: 2px solid var(--border); }
+.weekday { background: var(--panel); font-size: 13px; color: var(--gold); text-align: center; padding: 15px 0; font-weight: 900; text-transform: uppercase; }
+.day { background: var(--day-bg); min-height: 90px; padding: 10px 5px; position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+.day.today { background: rgba(254, 245, 231, 0.2); box-shadow: inset 0 0 0 3px var(--gold); }
+.day-num { font-weight: 900; font-size: 20px; margin-bottom: 5px; }
+.symbols { display: flex; gap: 3px; width: 90%; height: 12px; justify-content: center; margin-top: auto; padding-bottom: 10px; }
+.symbol-block { flex: 1; height: 100%; border-radius: 4px; max-width: 14px; }
+.stats-section { margin-top: 30px; background: var(--panel); border-radius: 26px; padding: 20px; border: 2px solid var(--border); }
+.stats-bars { display: flex; align-items: flex-end; gap: 6px; height: 140px; margin-top: 15px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
 .bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; cursor: pointer; }
-.bar-count { font-size: 10px; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
-.bar-stack { width: 85%; display: flex; flex-direction: column-reverse; border-radius: 4px 4px 0 0; overflow: hidden; min-height: 2px; }
+.bar-count { font-size: 13px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
+.bar-stack { width: 90%; display: flex; flex-direction: column-reverse; border-radius: 6px 6px 0 0; overflow: hidden; min-height: 3px; }
 .segment { width: 100%; }
-.bar-month-box { margin-top: 8px; font-size: 9px; font-weight: 900; color: var(--muted); }
-.bar-container.active .bar-month-box { color: var(--gold); }
-.year-month-card { background: var(--panel); padding: 15px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 20px; cursor: pointer; }
-.year-event-list { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; line-height: 1.6; }
-.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: flex-end; }
+.bar-month-box { margin-top: 10px; font-size: 12px; font-weight: 900; color: var(--muted); }
+.bar-container.active .bar-month-box { color: var(--gold); font-size: 14px; }
+.year-month-card { background: var(--panel); padding: 20px; border-radius: 26px; border: 2px solid var(--border); margin-bottom: 25px; cursor: pointer; }
+.year-event-list { margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--border); font-size: 16px; line-height: 1.8; font-weight: 500; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: flex-end; }
 .modal-bg.show { display: flex; }
-.modal { background: var(--panel); width: 100%; border-radius: 30px 30px 0 0; padding: 25px; box-sizing: border-box; border-top: 4px solid var(--gold); max-height: 90vh; overflow-y: auto; color: var(--text); }
-.modal input, .modal select { width: 100%; margin-bottom: 10px; padding: 15px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 16px; box-sizing: border-box; }
-.btn-export { background: #4a90e2; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 11px; margin-top: 5px; width: 100%; cursor: pointer; }
+.modal { background: var(--panel); width: 100%; border-radius: 40px 40px 0 0; padding: 30px; box-sizing: border-box; border-top: 6px solid var(--gold); max-height: 92vh; overflow-y: auto; color: var(--text); }
+.modal h3 { font-size: 26px; font-weight: 900; }
+.modal input, .modal select { width: 100%; margin-bottom: 15px; padding: 18px; border-radius: 16px; background: var(--bg); border: 2px solid var(--border); color: var(--text); font-size: 18px; font-weight: bold; box-sizing: border-box; }
+.btn-export { background: #4a90e2; color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 14px; margin-top: 8px; width: 100%; cursor: pointer; }
 </style>
 </head>
 <body data-theme="dark">
 <header>
   <div class="brand"><div class="title">FAMILY CALENDAR</div>
-    <div style="display:flex; gap:10px;"><button class="theme-toggle" id="themeToggle">🌓</button><button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#1c2e2e; border:none;">DNES</button></div>
+    <div style="display:flex; gap:12px;"><button class="theme-toggle" id="themeToggle">🌓</button><button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#1c2e2e; border:none;">DNES</button></div>
   </div>
   <div class="view-switch"><button id="btnMonthView" class="active">MĚSÍC</button><button id="btnYearView">ROK</button></div>
   <div class="person-search" id="personSearch"></div>
@@ -84,10 +85,10 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this) closeModal()">
   <div class="modal"><h3 id="modalTitle" style="color:var(--gold); margin-top:0;">Detail dne</h3><div id="eventList"></div>
     <div id="editForm"><input type="text" id="addName" placeholder="Jméno">
-      <div style="display:flex; gap:10px;"><select id="addType" style="flex:2"><option value="bday">🎂 Narozeniny</option><option value="nameday">🌸 Svátek</option><option value="anniv">💍 Výročí</option></select>
+      <div style="display:flex; gap:12px;"><select id="addType" style="flex:2"><option value="bday">🎂 Narozeniny</option><option value="nameday">🌸 Svátek</option><option value="anniv">💍 Výročí</option></select>
       <input type="number" id="addYear" placeholder="Rok" style="flex:1"></div>
-      <button class="btn-nav" style="width:100%; padding:18px; background:var(--gold); color:#1c2e2e; border:none; border-radius:15px; font-weight:bold;" id="saveBtn">ULOŽIT</button>
-    </div><button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:20px; font-weight:bold;">ZAVŘÍT</button>
+      <button class="btn-nav" style="width:100%; padding:22px; background:var(--gold); color:#1c2e2e; border:none; border-radius:18px; font-weight:900; font-size:20px;" id="saveBtn">ULOŽIT OSLAVU</button>
+    </div><button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:25px; font-weight:900; font-size:18px;">ZAVŘÍT</button>
   </div>
 </div>
 <script>
@@ -119,7 +120,7 @@ function openDay(m, d) {
     const list = document.getElementById('eventList'); list.innerHTML = "";
     (events[editKey] || []).forEach((ev, i) => { const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} let)` : "";
         list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}; flex-direction:column; align-items:flex-start;">
-            <div style="display:flex; width:100%; justify-content:space-between; align-items:center;"><span style="font-weight:900;">${cats[ev.type].i} ${ev.n}${age}</span><button onclick="delEv('${editKey}',${i})" style="color:#ff5252; background:none; border:none; font-weight:bold; font-size:20px;">×</button></div>
+            <div style="display:flex; width:100%; justify-content:space-between; align-items:center;"><span style="font-weight:900;">${cats[ev.type].i} ${ev.n}${age}</span><button onclick="delEv('${editKey}',${i})" style="color:#ff5252; background:none; border:none; font-weight:bold; font-size:24px;">×</button></div>
             <button class="btn-export" onclick="exportICS('${ev.n}','${ev.type}',${d},${m})">🔔 PŘIDAT PŘIPOMÍNKU</button></div>`;
     });
     document.getElementById('modalBg').classList.add('show');
@@ -155,7 +156,6 @@ function render() {
     }
     document.getElementById('monthAgenda').innerHTML = agendaHtml || "<div style='color:var(--muted); padding:10px;'>Žádné oslavy...</div>";
     
-    // Graf s "cenami" (počty)
     const stats = Array.from({length:12}, () => ({total:0, b:0, n:0, a:0}));
     for(let k in events) { const m = parseInt(k.split('-')[0]); events[k].forEach(e => { stats[m].total++; stats[m][e.type==='bday'?'b':e.type==='nameday'?'n':'a']++; }); }
     const max = Math.max(...stats.map(s=>s.total)) || 1;
@@ -174,19 +174,18 @@ function render() {
     const searchDiv = document.getElementById('personSearch'); searchDiv.innerHTML = "";
     Array.from(names).sort().forEach(n => searchDiv.innerHTML += `<div class="person-box" onclick="openPersonFilter('${n}')">${n}</div>`);
 
-    // Detailní Roční výpis
     const yl = document.getElementById('yearScrollList'); yl.innerHTML = "";
     for(let m=0; m<12; m++) {
         let mg = ""; let mEvents = ""; const md = new Date(curYear, m+1, 0).getDate(), mf = (new Date(curYear, m, 1).getDay() || 7) - 1;
         for(let i=0; i<mf; i++) mg += `<div></div>`;
         for(let d=1; d<=md; d++) {
             const k = `${m}-${d}`, has = events[k];
-            mg += `<div style="font-size:9px; padding:2px; ${has?`background:${cats[has[0].type].c}; color:#000; border-radius:3px; font-weight:bold;`:''}">${d}</div>`;
+            mg += `<div style="font-size:11px; padding:3px; ${has?`background:${cats[has[0].type].c}; color:#000; border-radius:4px; font-weight:bold;`:''}">${d}</div>`;
             if(has) has.forEach(e => { const age = (e.type==='bday' && e.y) ? ` (${curYear-e.y} let)` : ""; mEvents += `<div><b>${d}.</b> ${cats[e.type].i} ${e.n}${age}</div>`; });
         }
         yl.innerHTML += `<div class="year-month-card" onclick="curMonth=${m}; switchView('month'); render();">
-            <div style="font-weight:900; color:var(--gold); border-bottom:1px solid var(--border); padding-bottom:5px; margin-bottom:10px; display:flex; justify-content:space-between;"><span>${months[m]}</span><span style="opacity:0.5">${stats[m].total}x</span></div>
-            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; text-align:center; margin-bottom:10px;">${mg}</div>
+            <div style="font-weight:900; color:var(--gold); font-size:22px; border-bottom:2px solid var(--border); padding-bottom:8px; margin-bottom:12px; display:flex; justify-content:space-between;"><span>${months[m]}</span><span style="opacity:0.5">${stats[m].total}x</span></div>
+            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center; margin-bottom:15px;">${mg}</div>
             <div class="year-event-list">${mEvents || "<span style='opacity:0.3'>Žádné události</span>"}</div>
         </div>`;
     }

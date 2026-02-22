@@ -95,7 +95,7 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"], shortMonths = ["Led","Úno","Bře","Dub","Kvě","Čer","Čvc","Srp","Zář","Říj","Lis","Pro"];
 const cats = { bday: { c: 'var(--clr-bday)', i: '🎂', t: 'Narozeniny' }, nameday: { c: 'var(--clr-nameday)', i: '🌸', t: 'Svátek' }, anniv: { c: 'var(--clr-anniv)', i: '💍', t: 'Výročí' } };
-let curYear = 2026, curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_final_slate_v3') || '{}'), editKey = null;
+let curYear = 2026, curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_final_slate_v4') || '{}'), editKey = null;
 
 document.getElementById('themeToggle').onclick = () => { const b = document.body; const nt = b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; b.setAttribute('data-theme', nt); localStorage.setItem('cal_theme_pref', nt); };
 if(localStorage.getItem('cal_theme_pref') === 'light') document.body.setAttribute('data-theme', 'light');
@@ -133,9 +133,9 @@ function exportICS(n, t, d, m) {
 function saveEvent() {
     const n = document.getElementById('addName').value.trim(); if(!n) return;
     if(!events[editKey]) events[editKey] = []; events[editKey].push({ n, type: document.getElementById('addType').value, y: parseInt(document.getElementById('addYear').value) || null });
-    localStorage.setItem('family_cal_final_slate_v3', JSON.stringify(events)); document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
+    localStorage.setItem('family_cal_final_slate_v4', JSON.stringify(events)); document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
 }
-function delEv(k, i) { if(confirm("Smazat?")) { events[k].splice(i,1); if(!events[k].length) delete events[k]; localStorage.setItem('family_cal_final_slate_v3', JSON.stringify(events)); render(); openDay(...k.split('-')); } }
+function delEv(k, i) { if(confirm("Smazat?")) { events[k].splice(i,1); if(!events[k].length) delete events[k]; localStorage.setItem('family_cal_final_slate_v4', JSON.stringify(events)); render(); openDay(...k.split('-')); } }
 function openPersonFilter(name) {
     document.getElementById('modalTitle').innerText = `Vše pro: ${name}`; document.getElementById('editForm').style.display = "none";
     const list = document.getElementById('eventList'); list.innerHTML = "";

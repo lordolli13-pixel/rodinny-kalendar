@@ -64,7 +64,11 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 <body data-theme="dark">
 <header>
   <div class="brand"><div class="title">FAMILY CALENDAR</div>
-    <div style="display:flex; gap:10px;"><button class="theme-toggle" id="themeToggle">🌓</button><button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#1c2e2e; border:none; padding: 8px 12px; font-size: 14px;">DNES</button></div>
+    <div style="display:flex; gap:10px;">
+        <button class="theme-toggle" id="notifBtn" onclick="requestNotif()" title="Zapnout oznámení">🔔</button>
+        <button class="theme-toggle" id="themeToggle">🌓</button>
+        <button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#1c2e2e; border:none; padding: 8px 12px; font-size: 14px;">DNES</button>
+    </div>
   </div>
   <div class="view-switch"><button id="btnMonthView" class="active">MĚSÍC</button><button id="btnYearView">ROK</button></div>
   <div class="person-search" id="personSearch"></div>
@@ -119,7 +123,27 @@ function init() {
     document.getElementById('todayBtn').onclick = () => { const n=new Date(); curYear=n.getFullYear(); curMonth=n.getMonth(); render(); };
     document.getElementById('saveBtn').onclick = saveEvent;
     render();
+    checkNotifications();
 }
+
+function requestNotif() {
+    if (!("Notification" in window)) { alert("Váš prohlížeč nepodporuje oznámení."); return; }
+    Notification.requestPermission().then(p => { if(p === 'granted') alert("Oznámení aktivována!"); });
+}
+
+function checkNotifications() {
+    const today = new Date();
+    const k = `${today.getMonth()}-${today.getDate()}`;
+    if(events[k] && Notification.permission === 'granted') {
+        events[k].forEach(ev => {
+            new Notification(`Dnešní oslava!`, {
+                body: `${ev.n} má dnes ${cats[ev.type].t}!`,
+                icon: 'icon.png'
+            });
+        });
+    }
+}
+
 function exportData() { const d = btoa(unescape(encodeURIComponent(JSON.stringify(events)))); prompt("Kód pro přenos:", d); }
 function importData() { const c = prompt("Vložte kód:"); if (c) { try { const d = JSON.parse(decodeURIComponent(escape(atob(c)))); if (confirm("Importovat data?")) { events = d; localStorage.setItem(DB_KEY, JSON.stringify(events)); render(); } } catch(e) { alert("Chyba: Neplatný kód."); } } }
 function switchView(v) { document.getElementById('btnMonthView').classList.toggle('active', v==='month'); document.getElementById('btnYearView').classList.toggle('active', v==='year'); document.getElementById('monthSection').classList.toggle('active', v==='month'); document.getElementById('yearSection').classList.toggle('active', v==='year'); }
@@ -173,7 +197,8 @@ function render() {
         for(let i=0; i<mf; i++) mg += `<div></div>`;
         for(let d=1; d<=md; d++) {
             const k = `${m}-${d}`, has = events[k];
-            mg += `<div style="font-size:9px; padding:2px; ${has?`background:${cats[has[0].type].c}; color:#000; border-radius:4px; font-weight:bold;`:''}">${d}</div>`;
+            // Mini kalendář: dny s událostí jsou zvýrazněny barvou první události
+            mg += `<div style="font-size:9px; padding:2px; ${has?`background:${cats[has[0].type].c}; color:#000; border-radius:4px; font-weight:bold;`:''}" onclick="event.stopPropagation(); curMonth=${m}; switchView('month'); render(); openDay(${m},${d});">${d}</div>`;
             if(has) has.forEach(e => { const age = (e.type==='bday' && e.y) ? ` (${curYear-e.y} let)` : ""; mEvents += `<div><b>${d}.</b> ${cats[e.type].i} ${e.n}${age}</div>`; });
         }
         yl.innerHTML += `<div class="year-month-card" onclick="curMonth=${m}; switchView('month'); render();">

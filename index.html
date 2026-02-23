@@ -18,7 +18,7 @@
   --bg: #e8e2d2; --panel: #dbd4c3; --border: #c4bcab; --gold: #8d6228; --text: #1a1917;
   --muted: #5c5850; --day-bg: #f2ede0; --header-bg: rgba(232, 226, 210, 0.98);
 }
-body { margin:0; min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 60px; transition: background 0.4s; font-size: 18px; }
+body { margin:0; min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 80px; transition: background 0.4s; font-size: 18px; }
 header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); backdrop-filter: blur(15px); border-bottom: 2px solid var(--border); padding: 16px; }
 .brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .brand .title { font-weight: 900; font-size: 22px; color: var(--gold); letter-spacing: 1.5px; }
@@ -45,7 +45,7 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 .symbols { display: flex; gap: 3px; width: 90%; height: 12px; justify-content: center; margin-top: auto; padding-bottom: 10px; }
 .symbol-block { flex: 1; height: 100%; border-radius: 4px; max-width: 14px; }
 
-/* FIXOVANÝ GRAF - RESPONZIVNÍ */
+/* GRAF S FIXNÍM ÚHLEM */
 .stats-section { margin-top: 30px; background: var(--panel); border-radius: 26px; padding: 20px 10px; border: 2px solid var(--border); overflow: hidden; }
 .stats-bars { display: flex; align-items: flex-end; gap: 3px; height: 140px; margin-top: 15px; border-bottom: 2px solid var(--border); padding-bottom: 25px; justify-content: space-around; }
 .bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; cursor: pointer; min-width: 0; }
@@ -54,6 +54,9 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 .segment { width: 100%; }
 .bar-month-box { margin-top: 12px; font-size: 10px; font-weight: 800; color: var(--muted); transform: rotate(-45deg); transform-origin: top center; white-space: nowrap; }
 .bar-container.active .bar-month-box { color: var(--gold); font-weight: 900; text-decoration: underline; }
+
+.sync-zone { margin-top: 20px; display: flex; gap: 10px; }
+.btn-sync { background: var(--border); color: var(--muted); border: 1px solid var(--muted); padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; flex: 1; cursor: pointer; }
 
 .year-month-card { background: var(--panel); padding: 20px; border-radius: 26px; border: 2px solid var(--border); margin-bottom: 25px; cursor: pointer; }
 .year-event-list { margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--border); font-size: 16px; line-height: 1.8; font-weight: 500; }
@@ -81,7 +84,14 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
     <div id="monthLabel" class="month-label">—</div>
     <div class="agenda-section"><div class="agenda-title">Oslavy tento měsíc:</div><div id="monthAgenda"></div></div>
     <div class="month-grid" id="mainGrid"></div>
-    <div class="stats-section"><div class="agenda-title">Počty událostí v měsících:</div><div class="stats-bars" id="statsBars"></div></div>
+    <div class="stats-section">
+      <div class="agenda-title">Počty událostí v měsících:</div>
+      <div class="stats-bars" id="statsBars"></div>
+      <div class="sync-zone">
+        <button class="btn-sync" onclick="exportData()">📤 EXPORTOVAT DATA</button>
+        <button class="btn-sync" onclick="importData()">📥 IMPORTOVAT DATA</button>
+      </div>
+    </div>
   </section>
   <section id="yearSection" class="view-section"><div id="yearScrollList"></div></section>
 </main>
@@ -98,7 +108,8 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"], shortMonths = ["Led","Úno","Bře","Dub","Kvě","Čer","Čvc","Srp","Zář","Říj","Lis","Pro"];
 const cats = { bday: { c: 'var(--clr-bday)', i: '🎂', t: 'Narozeniny' }, nameday: { c: 'var(--clr-nameday)', i: '🌸', t: 'Svátek' }, anniv: { c: 'var(--clr-anniv)', i: '💍', t: 'Výročí' } };
-let curYear = new Date().getFullYear(), curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('fam_cal_final_v5') || '{}'), editKey = null;
+const DB_KEY = 'fam_cal_v6_sync';
+let curYear = new Date().getFullYear(), curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem(DB_KEY) || '{}'), editKey = null;
 
 document.getElementById('themeToggle').onclick = () => { const b = document.body; const nt = b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; b.setAttribute('data-theme', nt); localStorage.setItem('cal_theme_pref', nt); };
 if(localStorage.getItem('cal_theme_pref') === 'light') document.body.setAttribute('data-theme', 'light');
@@ -116,6 +127,27 @@ function init() {
     document.getElementById('saveBtn').onclick = saveEvent;
     render();
 }
+
+function exportData() {
+    const dataStr = btoa(unescape(encodeURIComponent(JSON.stringify(events))));
+    navigator.clipboard.writeText(dataStr).then(() => alert("Kód dat byl zkopírován do schránky! Pošli si ho do jiného zařízení a tam dej Import."));
+}
+
+function importData() {
+    const code = prompt("Vložte exportovaný kód dat:");
+    if (code) {
+        try {
+            const decoded = JSON.parse(decodeURIComponent(escape(atob(code))));
+            if (confirm("Importem přepíšete všechna stávající data v tomto zařízení. Pokračovat?")) {
+                events = decoded;
+                localStorage.setItem(DB_KEY, JSON.stringify(events));
+                render();
+                alert("Data byla úspěšně přesypána!");
+            }
+        } catch(e) { alert("Chyba: Neplatný kód dat."); }
+    }
+}
+
 function switchView(v) { document.getElementById('btnMonthView').classList.toggle('active', v==='month'); document.getElementById('btnYearView').classList.toggle('active', v==='year'); document.getElementById('monthSection').classList.toggle('active', v==='month'); document.getElementById('yearSection').classList.toggle('active', v==='year'); }
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
 
@@ -125,7 +157,7 @@ function openDay(m, d) {
     (events[editKey] || []).forEach((ev, i) => { const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} let)` : "";
         list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}; flex-direction:column; align-items:flex-start;">
             <div style="display:flex; width:100%; justify-content:space-between; align-items:center;"><span style="font-weight:900;">${cats[ev.type].i} ${ev.n}${age}</span><button onclick="delEv('${editKey}',${i})" style="color:#ff5252; background:none; border:none; font-weight:bold; font-size:28px;">×</button></div>
-            <button class="btn-export" onclick="pushToGoogle('${ev.n}','${ev.type}',${d},${m})">🔔 PŘIPOMENOUT V GOOGLE KALENDÁŘI</button></div>`;
+            <button class="btn-export" onclick="pushToGoogle('${ev.n}','${ev.type}',${d},${m})">🔔 PŘIDAT DO GOOGLE KALENDÁŘE</button></div>`;
     });
     document.getElementById('modalBg').classList.add('show');
 }
@@ -142,10 +174,10 @@ function pushToGoogle(n, t, d, m) {
 function saveEvent() {
     const n = document.getElementById('addName').value.trim(); if(!n) return;
     if(!events[editKey]) events[editKey] = []; events[editKey].push({ n, type: document.getElementById('addType').value, y: parseInt(document.getElementById('addYear').value) || null });
-    localStorage.setItem('fam_cal_final_v5', JSON.stringify(events)); document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
+    localStorage.setItem(DB_KEY, JSON.stringify(events)); document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
 }
 
-function delEv(k, i) { if(confirm("Smazat?")) { events[k].splice(i,1); if(!events[k].length) delete events[k]; localStorage.setItem('fam_cal_final_v5', JSON.stringify(events)); render(); openDay(...k.split('-')); } }
+function delEv(k, i) { if(confirm("Smazat?")) { events[k].splice(i,1); if(!events[k].length) delete events[k]; localStorage.setItem(DB_KEY, JSON.stringify(events)); render(); openDay(...k.split('-')); } }
 
 function openPersonFilter(name) {
     document.getElementById('modalTitle').innerText = `Oslavy: ${name}`; document.getElementById('editForm').style.display = "none";
@@ -166,7 +198,7 @@ function render() {
         let syms = ""; evs.forEach(ev => { syms += `<div class="symbol-block" style="background:${cats[ev.type].c}"></div>`; const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} l.)` : ""; agendaHtml += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}" onclick="openDay(${curMonth},${d})"><strong>${d}.</strong> ${cats[ev.type].i} ${ev.n}${age}</div>`; });
         grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})"><div class="day-num">${d}</div><div class="symbols">${syms}</div></div>`;
     }
-    document.getElementById('monthAgenda').innerHTML = agendaHtml || "<div style='color:var(--muted); padding:10px;'>Žádné oslavy tento měsíc.</div>";
+    document.getElementById('monthAgenda').innerHTML = agendaHtml || "<div style='color:var(--muted); padding:10px;'>Žádné oslavy.</div>";
     
     const stats = Array.from({length:12}, () => ({total:0, b:0, n:0, a:0}));
     for(let k in events) { const m = parseInt(k.split('-')[0]); events[k].forEach(e => { stats[m].total++; stats[m][e.type==='bday'?'b':e.type==='nameday'?'n':'a']++; }); }
@@ -198,7 +230,7 @@ function render() {
         yl.innerHTML += `<div class="year-month-card" onclick="curMonth=${m}; switchView('month'); render();">
             <div style="font-weight:900; color:var(--gold); font-size:22px; border-bottom:2px solid var(--border); padding-bottom:8px; margin-bottom:12px; display:flex; justify-content:space-between;"><span>${months[m]}</span><span style="opacity:0.5">${stats[m].total}x</span></div>
             <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center; margin-bottom:15px;">${mg}</div>
-            <div class="year-event-list">${mEvents || "<span style='opacity:0.3'>Prázdný měsíc</span>"}</div>
+            <div class="year-event-list">${mEvents || "<span style='opacity:0.3'>Prázdno</span>"}</div>
         </div>`;
     }
 }

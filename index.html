@@ -59,7 +59,7 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 .modal { background: var(--panel); width: 100%; border-radius: 40px 40px 0 0; padding: 30px; box-sizing: border-box; border-top: 6px solid var(--gold); max-height: 92vh; overflow-y: auto; color: var(--text); }
 .modal h3 { font-size: 26px; font-weight: 900; }
 .modal input, .modal select { width: 100%; margin-bottom: 15px; padding: 18px; border-radius: 16px; background: var(--bg); border: 2px solid var(--border); color: var(--text); font-size: 18px; font-weight: bold; box-sizing: border-box; }
-.btn-export { background: #4a90e2; color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 14px; margin-top: 8px; width: 100%; cursor: pointer; }
+.btn-export { background: #4a90e2; color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 16px; margin-top: 8px; width: 100%; cursor: pointer; }
 </style>
 </head>
 <body data-theme="dark">
@@ -95,7 +95,7 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"], shortMonths = ["Led","Úno","Bře","Dub","Kvě","Čer","Čvc","Srp","Zář","Říj","Lis","Pro"];
 const cats = { bday: { c: 'var(--clr-bday)', i: '🎂', t: 'Narozeniny' }, nameday: { c: 'var(--clr-nameday)', i: '🌸', t: 'Svátek' }, anniv: { c: 'var(--clr-anniv)', i: '💍', t: 'Výročí' } };
-let curYear = 2026, curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_final_slate_v4') || '{}'), editKey = null;
+let curYear = new Date().getFullYear(), curMonth = new Date().getMonth(), events = JSON.parse(localStorage.getItem('family_cal_v4_final') || '{}'), editKey = null;
 
 document.getElementById('themeToggle').onclick = () => { const b = document.body; const nt = b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; b.setAttribute('data-theme', nt); localStorage.setItem('cal_theme_pref', nt); };
 if(localStorage.getItem('cal_theme_pref') === 'light') document.body.setAttribute('data-theme', 'light');
@@ -115,33 +115,42 @@ function init() {
 }
 function switchView(v) { document.getElementById('btnMonthView').classList.toggle('active', v==='month'); document.getElementById('btnYearView').classList.toggle('active', v==='year'); document.getElementById('monthSection').classList.toggle('active', v==='month'); document.getElementById('yearSection').classList.toggle('active', v==='year'); }
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
+
 function openDay(m, d) {
     editKey = `${m}-${d}`; document.getElementById('modalTitle').innerText = `${d}. ${months[m]} ${curYear}`; document.getElementById('editForm').style.display = "block";
     const list = document.getElementById('eventList'); list.innerHTML = "";
     (events[editKey] || []).forEach((ev, i) => { const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} let)` : "";
         list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}; flex-direction:column; align-items:flex-start;">
-            <div style="display:flex; width:100%; justify-content:space-between; align-items:center;"><span style="font-weight:900;">${cats[ev.type].i} ${ev.n}${age}</span><button onclick="delEv('${editKey}',${i})" style="color:#ff5252; background:none; border:none; font-weight:bold; font-size:24px;">×</button></div>
-            <button class="btn-export" onclick="exportICS('${ev.n}','${ev.type}',${d},${m})">🔔 PŘIDAT PŘIPOMÍNKU</button></div>`;
+            <div style="display:flex; width:100%; justify-content:space-between; align-items:center;"><span style="font-weight:900;">${cats[ev.type].i} ${ev.n}${age}</span><button onclick="delEv('${editKey}',${i})" style="color:#ff5252; background:none; border:none; font-weight:bold; font-size:28px;">×</button></div>
+            <button class="btn-export" onclick="pushToGoogle('${ev.n}','${ev.type}',${d},${m})">🔔 PŘIDAT DO GOOGLE KALENDÁŘE</button></div>`;
     });
     document.getElementById('modalBg').classList.add('show');
 }
-function exportICS(n, t, d, m) {
-    const dt = curYear + (m+1).toString().padStart(2,'0') + d.toString().padStart(2,'0');
-    const ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',`DTSTART;VALUE=DATE:${dt}`,`SUMMARY:${cats[t].i} ${n}`,'RRULE:FREQ=YEARLY','BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',`DESCRIPTION:Zítra: ${n}`,'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], {type:'text/calendar'})); a.download = `${n}.ics`; a.click();
+
+function pushToGoogle(n, t, d, m) {
+    const title = encodeURIComponent(`${cats[t].i} ${n}`);
+    const dateStr = curYear + (m + 1).toString().padStart(2, '0') + d.toString().padStart(2, '0');
+    const nextDay = new Date(curYear, m, d + 1);
+    const dateEndStr = nextDay.getFullYear() + (nextDay.getMonth() + 1).toString().padStart(2, '0') + nextDay.getDate().toString().padStart(2, '0');
+    const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dateStr}/${dateEndStr}&recur=RRULE:FREQ=YEARLY&details=Připomínka z aplikace Rodinný Kalendář&sf=true&output=xml`;
+    window.open(url, '_blank');
 }
+
 function saveEvent() {
     const n = document.getElementById('addName').value.trim(); if(!n) return;
     if(!events[editKey]) events[editKey] = []; events[editKey].push({ n, type: document.getElementById('addType').value, y: parseInt(document.getElementById('addYear').value) || null });
-    localStorage.setItem('family_cal_final_slate_v4', JSON.stringify(events)); document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
+    localStorage.setItem('family_cal_v4_final', JSON.stringify(events)); document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
 }
-function delEv(k, i) { if(confirm("Smazat?")) { events[k].splice(i,1); if(!events[k].length) delete events[k]; localStorage.setItem('family_cal_final_slate_v4', JSON.stringify(events)); render(); openDay(...k.split('-')); } }
+
+function delEv(k, i) { if(confirm("Opravdu smazat tuto oslavu?")) { events[k].splice(i,1); if(!events[k].length) delete events[k]; localStorage.setItem('family_cal_v4_final', JSON.stringify(events)); render(); openDay(...k.split('-')); } }
+
 function openPersonFilter(name) {
     document.getElementById('modalTitle').innerText = `Vše pro: ${name}`; document.getElementById('editForm').style.display = "none";
     const list = document.getElementById('eventList'); list.innerHTML = "";
     for (let k in events) { events[k].forEach(ev => { if(ev.n === name) { const [m, d] = k.split('-'); list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}"><strong>${d}. ${months[m]}</strong>: ${cats[ev.type].i} ${cats[ev.type].t}</div>`; } }); }
     document.getElementById('modalBg').classList.add('show');
 }
+
 function render() {
     document.getElementById('monthSelect').value = curMonth; document.getElementById('yearSelect').value = curYear; document.getElementById('monthLabel').innerText = `${months[curMonth]} ${curYear}`;
     const grid = document.getElementById('mainGrid'); grid.innerHTML = ""; ["Po","Út","St","Čt","Pá","So","Ne"].forEach(w => grid.innerHTML += `<div class="weekday">${w}</div>`);
@@ -154,7 +163,7 @@ function render() {
         let syms = ""; evs.forEach(ev => { syms += `<div class="symbol-block" style="background:${cats[ev.type].c}"></div>`; const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} l.)` : ""; agendaHtml += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}" onclick="openDay(${curMonth},${d})"><strong>${d}.</strong> ${cats[ev.type].i} ${ev.n}${age}</div>`; });
         grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})"><div class="day-num">${d}</div><div class="symbols">${syms}</div></div>`;
     }
-    document.getElementById('monthAgenda').innerHTML = agendaHtml || "<div style='color:var(--muted); padding:10px;'>Žádné oslavy...</div>";
+    document.getElementById('monthAgenda').innerHTML = agendaHtml || "<div style='color:var(--muted); padding:10px;'>Tento měsíc nejsou žádné oslavy.</div>";
     
     const stats = Array.from({length:12}, () => ({total:0, b:0, n:0, a:0}));
     for(let k in events) { const m = parseInt(k.split('-')[0]); events[k].forEach(e => { stats[m].total++; stats[m][e.type==='bday'?'b':e.type==='nameday'?'n':'a']++; }); }

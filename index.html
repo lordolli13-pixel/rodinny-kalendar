@@ -65,7 +65,7 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 <header>
   <div class="brand"><div class="title">FAMILY CALENDAR</div>
     <div style="display:flex; gap:10px;">
-        <button class="theme-toggle" id="notifBtn" onclick="requestNotif()" title="Zapnout oznámení">🔔</button>
+        <button class="theme-toggle" onclick="requestNotif()" title="Zapnout oznámení">🔔</button>
         <button class="theme-toggle" id="themeToggle">🌓</button>
         <button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#1c2e2e; border:none; padding: 8px 12px; font-size: 14px;">DNES</button>
     </div>
@@ -101,8 +101,14 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
     </div><button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:20px; font-weight:900; font-size:16px;">ZAVŘÍT</button>
   </div>
 </div>
+
 <script>
-if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+if ('serviceWorker' in navigator) { 
+    navigator.serviceWorker.register('sw.js').then(() => {
+        console.log("Service Worker registrován.");
+    });
+}
+
 const months = ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"], shortMonths = ["Led","Úno","Bře","Dub","Kvě","Čer","Čvc","Srp","Zář","Říj","Lis","Pro"];
 const cats = { bday: { c: 'var(--clr-bday)', i: '🎂', t: 'Narozeniny' }, nameday: { c: 'var(--clr-nameday)', i: '🌸', t: 'Svátek' }, anniv: { c: 'var(--clr-anniv)', i: '💍', t: 'Výročí' } };
 const DB_KEY = 'fam_cal_v6_sync';
@@ -128,17 +134,28 @@ function init() {
 
 function requestNotif() {
     if (!("Notification" in window)) { alert("Váš prohlížeč nepodporuje oznámení."); return; }
-    Notification.requestPermission().then(p => { if(p === 'granted') alert("Oznámení aktivována!"); });
+    Notification.requestPermission().then(p => { 
+        if(p === 'granted') {
+            alert("Oznámení aktivována!");
+            checkNotifications();
+        }
+    });
 }
 
 function checkNotifications() {
     const today = new Date();
     const k = `${today.getMonth()}-${today.getDate()}`;
-    if(events[k] && Notification.permission === 'granted') {
-        events[k].forEach(ev => {
-            new Notification(`Dnešní oslava!`, {
-                body: `${ev.n} má dnes ${cats[ev.type].t}!`,
-                icon: 'icon.png'
+    
+    if (events[k] && Notification.permission === 'granted') {
+        navigator.serviceWorker.ready.then((registration) => {
+            events[k].forEach(ev => {
+                registration.showNotification(`Dnešní oslava!`, {
+                    body: `${ev.n} má dnes ${cats[ev.type].t}!`,
+                    icon: 'icon.png',
+                    badge: 'icon.png',
+                    vibrate: [200, 100, 200],
+                    tag: 'celebration-' + k 
+                });
             });
         });
     }
@@ -197,7 +214,6 @@ function render() {
         for(let i=0; i<mf; i++) mg += `<div></div>`;
         for(let d=1; d<=md; d++) {
             const k = `${m}-${d}`, has = events[k];
-            // Mini kalendář: dny s událostí jsou zvýrazněny barvou první události
             mg += `<div style="font-size:9px; padding:2px; ${has?`background:${cats[has[0].type].c}; color:#000; border-radius:4px; font-weight:bold;`:''}" onclick="event.stopPropagation(); curMonth=${m}; switchView('month'); render(); openDay(${m},${d});">${d}</div>`;
             if(has) has.forEach(e => { const age = (e.type==='bday' && e.y) ? ` (${curYear-e.y} let)` : ""; mEvents += `<div><b>${d}.</b> ${cats[e.type].i} ${e.n}${age}</div>`; });
         }

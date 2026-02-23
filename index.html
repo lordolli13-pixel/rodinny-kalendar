@@ -18,150 +18,47 @@
   --bg: #e8e2d2; --panel: #dbd4c3; --border: #c4bcab; --gold: #8d6228; --text: #1a1917;
   --muted: #5c5850; --day-bg: #f2ede0; --header-bg: rgba(232, 226, 210, 0.98);
 }
-
-/* OPRAVA: Základní reset pro responzivitu */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-body { 
-  margin:0; 
-  min-height: 100vh; 
-  background: var(--bg); 
-  color: var(--text); 
-  padding-bottom: 40px; 
-  transition: background 0.4s; 
-  font-size: 16px; /* Optimalizováno pro čitelnost */
-  overflow-x: hidden;
-}
-
-header { 
-  position: sticky; 
-  top: 0; 
-  z-index: 100; 
-  background: var(--header-bg); 
-  backdrop-filter: blur(15px); 
-  border-bottom: 2px solid var(--border); 
-  padding: 12px; 
-}
-
+body { margin:0; min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 40px; transition: background 0.4s; font-size: 16px; overflow-x: hidden; }
+header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); backdrop-filter: blur(15px); border-bottom: 2px solid var(--border); padding: 12px; }
 .brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .brand .title { font-weight: 900; font-size: 18px; color: var(--gold); letter-spacing: 1px; }
-
-.theme-toggle { 
-  background: var(--panel); border: 1.5px solid var(--border); color: var(--text); 
-  padding: 8px 12px; border-radius: 12px; cursor: pointer; font-size: 18px; 
-}
-
-.view-switch { 
-  display: flex; background: var(--panel); border-radius: 12px; padding: 4px; 
-  margin-bottom: 12px; border: 1.5px solid var(--border); 
-}
-.view-switch button { 
-  flex: 1; border: none; background: transparent; color: var(--muted); 
-  padding: 10px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; 
-}
+.theme-toggle { background: var(--panel); border: 1.5px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 12px; cursor: pointer; font-size: 18px; }
+.view-switch { display: flex; background: var(--panel); border-radius: 12px; padding: 4px; margin-bottom: 12px; border: 1.5px solid var(--border); }
+.view-switch button { flex: 1; border: none; background: transparent; color: var(--muted); padding: 10px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; }
 .view-switch button.active { background: var(--gold); color: #1c2e2e; }
-
-.person-search { 
-  display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px 0; 
-  scrollbar-width: none; -webkit-overflow-scrolling: touch;
-}
-.person-box { 
-  background: var(--panel); border: 1.5px solid var(--gold); color: var(--gold); 
-  padding: 6px 16px; border-radius: 20px; white-space: nowrap; font-size: 13px; 
-  font-weight: 800; cursor: pointer; 
-}
-
+.person-search { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px 0; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.person-box { background: var(--panel); border: 1.5px solid var(--gold); color: var(--gold); padding: 6px 16px; border-radius: 20px; white-space: nowrap; font-size: 13px; font-weight: 800; cursor: pointer; }
 .controls { display: flex; gap: 8px; margin-top: 5px; }
-.select { 
-  background: var(--panel); border: 1.5px solid var(--border); color: var(--text); 
-  padding: 10px; border-radius: 10px; flex: 1; font-size: 15px; font-weight: bold; appearance: none; 
-}
-.btn-nav { 
-  background: var(--panel); border: 1.5px solid var(--border); color: var(--text); 
-  padding: 8px 16px; border-radius: 10px; font-weight: 900; font-size: 16px; cursor: pointer; 
-}
-
+.select { background: var(--panel); border: 1.5px solid var(--border); color: var(--text); padding: 10px; border-radius: 10px; flex: 1; font-size: 15px; font-weight: bold; appearance: none; }
+.btn-nav { background: var(--panel); border: 1.5px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 10px; font-weight: 900; font-size: 16px; cursor: pointer; }
 .main-content { padding: 12px; width: 100%; max-width: 800px; margin: 0 auto; }
 .view-section { display: none; }
 .view-section.active { display: block; }
-
-.agenda-title { 
-  font-size: 12px; font-weight: 900; color: var(--gold); 
-  text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; 
-}
-
-.ev-row { 
-  background: var(--panel); padding: 14px; border-radius: 16px; margin-bottom: 10px; 
-  display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); 
-  border-left: 6px solid transparent; font-size: 15px; font-weight: 600; 
-}
-
+.agenda-title { font-size: 12px; font-weight: 900; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+.ev-row { background: var(--panel); padding: 14px; border-radius: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); border-left: 6px solid transparent; font-size: 15px; font-weight: 600; }
 .month-label { font-size: 26px; font-weight: 900; margin-bottom: 16px; color: var(--gold); }
-
-/* RESPONZIVNÍ GRID */
-.month-grid { 
-  display: grid; grid-template-columns: repeat(7, 1fr); 
-  gap: 1px; background: var(--border); border-radius: 16px; 
-  overflow: hidden; border: 1px solid var(--border); 
-}
-.weekday { 
-  background: var(--panel); font-size: 10px; color: var(--gold); 
-  text-align: center; padding: 10px 0; font-weight: 900; text-transform: uppercase; 
-}
-.day { 
-  background: var(--day-bg); min-height: 65px; padding: 6px 2px; 
-  position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; 
-}
+.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+.weekday { background: var(--panel); font-size: 10px; color: var(--gold); text-align: center; padding: 10px 0; font-weight: 900; text-transform: uppercase; }
+.day { background: var(--day-bg); min-height: 65px; padding: 6px 2px; position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
 .day.today { background: rgba(254, 245, 231, 0.15); box-shadow: inset 0 0 0 2px var(--gold); }
 .day-num { font-weight: 900; font-size: 16px; margin-bottom: 4px; }
-
-.symbols { 
-  display: flex; gap: 2px; width: 90%; height: 8px; 
-  justify-content: center; margin-top: auto; padding-bottom: 4px; 
-}
+.symbols { display: flex; gap: 2px; width: 90%; height: 8px; justify-content: center; margin-top: auto; padding-bottom: 4px; }
 .symbol-block { flex: 1; height: 100%; border-radius: 2px; max-width: 8px; }
-
-/* GRAF - FIXOVANÝ PRO MALÉ DISPLEJE */
-.stats-section { 
-  margin-top: 24px; background: var(--panel); border-radius: 20px; 
-  padding: 16px 8px; border: 1px solid var(--border); overflow: hidden; 
-}
-.stats-bars { 
-  display: flex; align-items: flex-end; gap: 2px; height: 100px; 
-  margin-top: 10px; border-bottom: 1px solid var(--border); padding-bottom: 20px; 
-  justify-content: space-around; 
-}
+.stats-section { margin-top: 24px; background: var(--panel); border-radius: 20px; padding: 16px 8px; border: 1px solid var(--border); overflow: hidden; }
+.stats-bars { display: flex; align-items: flex-end; gap: 2px; height: 100px; margin-top: 10px; border-bottom: 1px solid var(--border); padding-bottom: 20px; justify-content: space-around; }
 .bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
 .bar-stack { width: 60%; display: flex; flex-direction: column-reverse; border-radius: 2px 2px 0 0; overflow: hidden; min-height: 2px; }
-.bar-month-box { 
-  position: absolute; bottom: -18px; font-size: 8px; font-weight: 800; 
-  color: var(--muted); transform: rotate(-45deg); white-space: nowrap; 
-}
-
+.bar-month-box { position: absolute; bottom: -18px; font-size: 8px; font-weight: 800; color: var(--muted); transform: rotate(-45deg); white-space: nowrap; }
 .sync-zone { margin-top: 24px; display: flex; gap: 8px; }
-.btn-sync { 
-  background: var(--border); color: var(--muted); border: 1px solid var(--muted); 
-  padding: 10px; border-radius: 10px; font-size: 11px; font-weight: bold; flex: 1; 
-}
-
+.btn-sync { background: var(--border); color: var(--muted); border: 1px solid var(--muted); padding: 10px; border-radius: 10px; font-size: 11px; font-weight: bold; flex: 1; }
 .year-month-card { background: var(--panel); padding: 16px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 16px; }
 .year-event-list { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 14px; line-height: 1.6; }
-
-/* MODAL - RESPONZIVNÍ VÝŠKA */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: flex-end; }
 .modal-bg.show { display: flex; }
-.modal { 
-  background: var(--panel); width: 100%; border-radius: 30px 30px 0 0; 
-  padding: 24px; box-sizing: border-box; border-top: 5px solid var(--gold); 
-  max-height: 85vh; overflow-y: auto; color: var(--text); 
-}
+.modal { background: var(--panel); width: 100%; border-radius: 30px 30px 0 0; padding: 24px; box-sizing: border-box; border-top: 5px solid var(--gold); max-height: 85vh; overflow-y: auto; color: var(--text); }
 .modal h3 { font-size: 20px; font-weight: 900; margin: 0 0 16px 0; }
-.modal input, .modal select { 
-  width: 100%; margin-bottom: 12px; padding: 14px; border-radius: 12px; 
-  background: var(--bg); border: 1.5px solid var(--border); color: var(--text); 
-  font-size: 16px; font-weight: bold; 
-}
-.btn-export { background: #4a90e2; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 14px; margin-top: 8px; width: 100%; }
+.modal input, .modal select { width: 100%; margin-bottom: 12px; padding: 14px; border-radius: 12px; background: var(--bg); border: 1.5px solid var(--border); color: var(--text); font-size: 16px; font-weight: bold; }
 </style>
 </head>
 <body data-theme="dark">
@@ -223,26 +120,8 @@ function init() {
     document.getElementById('saveBtn').onclick = saveEvent;
     render();
 }
-
-function exportData() {
-    const dataStr = btoa(unescape(encodeURIComponent(JSON.stringify(events))));
-    prompt("Kód pro přenos:", dataStr);
-}
-
-function importData() {
-    const code = prompt("Vložte kód:");
-    if (code) {
-        try {
-            const decoded = JSON.parse(decodeURIComponent(escape(atob(code))));
-            if (confirm("Importovat data?")) {
-                events = decoded;
-                localStorage.setItem(DB_KEY, JSON.stringify(events));
-                render();
-            }
-        } catch(e) { alert("Chyba: Neplatný kód."); }
-    }
-}
-
+function exportData() { const d = btoa(unescape(encodeURIComponent(JSON.stringify(events)))); prompt("Kód pro přenos:", d); }
+function importData() { const c = prompt("Vložte kód:"); if (c) { try { const d = JSON.parse(decodeURIComponent(escape(atob(c)))); if (confirm("Importovat data?")) { events = d; localStorage.setItem(DB_KEY, JSON.stringify(events)); render(); } } catch(e) { alert("Chyba: Neplatný kód."); } } }
 function switchView(v) { document.getElementById('btnMonthView').classList.toggle('active', v==='month'); document.getElementById('btnYearView').classList.toggle('active', v==='year'); document.getElementById('monthSection').classList.toggle('active', v==='month'); document.getElementById('yearSection').classList.toggle('active', v==='year'); }
 function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
 
@@ -250,37 +129,24 @@ function openDay(m, d) {
     editKey = `${m}-${d}`; document.getElementById('modalTitle').innerText = `${d}. ${months[m]} ${curYear}`; document.getElementById('editForm').style.display = "block";
     const list = document.getElementById('eventList'); list.innerHTML = "";
     (events[editKey] || []).forEach((ev, i) => { const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} let)` : "";
-        list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}; flex-direction:column; align-items:flex-start;">
+        list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c};">
             <div style="display:flex; width:100%; justify-content:space-between; align-items:center;"><span style="font-weight:900;">${cats[ev.type].i} ${ev.n}${age}</span><button onclick="delEv('${editKey}',${i})" style="color:#ff5252; background:none; border:none; font-weight:bold; font-size:24px;">×</button></div>
-            <button class="btn-export" onclick="pushToGoogle('${ev.n}','${ev.type}',${d},${m})">🔔 PŘIDAT DO GOOGLE KALENDÁŘE</button></div>`;
+        </div>`;
     });
     document.getElementById('modalBg').classList.add('show');
 }
-
-function pushToGoogle(n, t, d, m) {
-    const title = encodeURIComponent(`${cats[t].i} ${n}`);
-    const dateStr = curYear + (m + 1).toString().padStart(2, '0') + d.toString().padStart(2, '0');
-    const nextDay = new Date(curYear, m, d + 1);
-    const dateEndStr = nextDay.getFullYear() + (nextDay.getMonth() + 1).toString().padStart(2, '0') + nextDay.getDate().toString().padStart(2, '0');
-    const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dateStr}/${dateEndStr}&recur=RRULE:FREQ=YEARLY&details=Připomínka z rodinné aplikace&sf=true&output=xml`;
-    window.open(url, '_blank');
-}
-
 function saveEvent() {
     const n = document.getElementById('addName').value.trim(); if(!n) return;
     if(!events[editKey]) events[editKey] = []; events[editKey].push({ n, type: document.getElementById('addType').value, y: parseInt(document.getElementById('addYear').value) || null });
     localStorage.setItem(DB_KEY, JSON.stringify(events)); document.getElementById('addName').value = ""; document.getElementById('addYear').value = ""; render(); openDay(...editKey.split('-'));
 }
-
 function delEv(k, i) { if(confirm("Smazat?")) { events[k].splice(i,1); if(!events[k].length) delete events[k]; localStorage.setItem(DB_KEY, JSON.stringify(events)); render(); openDay(...k.split('-')); } }
-
 function openPersonFilter(name) {
     document.getElementById('modalTitle').innerText = `Oslavy: ${name}`; document.getElementById('editForm').style.display = "none";
     const list = document.getElementById('eventList'); list.innerHTML = "";
     for (let k in events) { events[k].forEach(ev => { if(ev.n === name) { const [m, d] = k.split('-'); list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}"><strong>${d}. ${months[m]}</strong>: ${cats[ev.type].i} ${cats[ev.type].t}</div>`; } }); }
     document.getElementById('modalBg').classList.add('show');
 }
-
 function render() {
     document.getElementById('monthSelect').value = curMonth; document.getElementById('yearSelect').value = curYear; document.getElementById('monthLabel').innerText = `${months[curMonth]} ${curYear}`;
     const grid = document.getElementById('mainGrid'); grid.innerHTML = ""; ["Po","Út","St","Čt","Pá","So","Ne"].forEach(w => grid.innerHTML += `<div class="weekday">${w}</div>`);
@@ -294,24 +160,13 @@ function render() {
         grid.innerHTML += `<div class="day ${isToday?'today':''}" onclick="openDay(${curMonth},${d})"><div class="day-num">${d}</div><div class="symbols">${syms}</div></div>`;
     }
     document.getElementById('monthAgenda').innerHTML = agendaHtml || "<div style='color:var(--muted); padding:10px;'>Žádné oslavy.</div>";
-    
     const stats = Array.from({length:12}, () => ({total:0, b:0, n:0, a:0}));
     for(let k in events) { const m = parseInt(k.split('-')[0]); events[k].forEach(e => { stats[m].total++; stats[m][e.type==='bday'?'b':e.type==='nameday'?'n':'a']++; }); }
     const max = Math.max(...stats.map(s=>s.total)) || 1;
-    document.getElementById('statsBars').innerHTML = stats.map((s,i) => `
-        <div class="bar-container ${i===curMonth?'active':''}" onclick="curMonth=${i}; render();">
-            <div class="bar-stack" style="height:${(s.total/max)*85}%">
-                <div class="segment" style="height:${(s.b/(s.total||1))*100}%; background:var(--clr-bday)"></div>
-                <div class="segment" style="height:${(s.n/(s.total||1))*100}%; background:var(--clr-nameday)"></div>
-                <div class="segment" style="height:${(s.a/(s.total||1))*100}%; background:var(--clr-anniv)"></div>
-            </div>
-            <div class="bar-month-box">${shortMonths[i]}</div>
-        </div>`).join('');
-
+    document.getElementById('statsBars').innerHTML = stats.map((s,i) => `<div class="bar-container ${i===curMonth?'active':''}" onclick="curMonth=${i}; render();"><div class="bar-stack" style="height:${(s.total/max)*85}%"><div class="segment" style="height:${(s.b/(s.total||1))*100}%; background:var(--clr-bday)"></div><div class="segment" style="height:${(s.n/(s.total||1))*100}%; background:var(--clr-nameday)"></div><div class="segment" style="height:${(s.a/(s.total||1))*100}%; background:var(--clr-anniv)"></div></div><div class="bar-month-box">${shortMonths[i]}</div></div>`).join('');
     for(let k in events) events[k].forEach(e => names.add(e.n));
     const searchDiv = document.getElementById('personSearch'); searchDiv.innerHTML = "";
     Array.from(names).sort().forEach(n => searchDiv.innerHTML += `<div class="person-box" onclick="openPersonFilter('${n}')">${n}</div>`);
-
     const yl = document.getElementById('yearScrollList'); yl.innerHTML = "";
     for(let m=0; m<12; m++) {
         let mg = ""; let mEvents = ""; const md = new Date(curYear, m+1, 0).getDate(), mf = (new Date(curYear, m, 1).getDay() || 7) - 1;

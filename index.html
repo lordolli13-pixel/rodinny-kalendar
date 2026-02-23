@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="icon.png">
 <style>
 :root {
-  --bg: #2F4F4F; --panel: #263f3f; --border: #1c2e2e; --gold: #fef5e7; --text: #fef5e7;       
+  --bg: #2F4F4F; --panel: #263f3f; --border: #1c2e2e; --gold: #fef5e7; --text: #fef5e7;        
   --muted: #a3b8b8; --clr-bday: #ffab40; --clr-nameday: #98ee99; --clr-anniv: #ff80ab;  
   --day-bg: #365a5a; --header-bg: rgba(47, 79, 79, 0.98);
   font-family: 'Inter', -apple-system, sans-serif;
@@ -18,60 +18,156 @@
   --bg: #e8e2d2; --panel: #dbd4c3; --border: #c4bcab; --gold: #8d6228; --text: #1a1917;
   --muted: #5c5850; --day-bg: #f2ede0; --header-bg: rgba(232, 226, 210, 0.98);
 }
-body { margin:0; min-height: 100vh; background: var(--bg); color: var(--text); padding-bottom: 80px; transition: background 0.4s; font-size: 18px; }
-header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); backdrop-filter: blur(15px); border-bottom: 2px solid var(--border); padding: 16px; }
-.brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.brand .title { font-weight: 900; font-size: 22px; color: var(--gold); letter-spacing: 1.5px; }
-.theme-toggle { background: var(--panel); border: 1.5px solid var(--border); color: var(--text); padding: 10px 15px; border-radius: 12px; cursor: pointer; font-size: 22px; }
-.view-switch { display: flex; background: var(--panel); border-radius: 16px; padding: 5px; margin-bottom: 15px; border: 1.5px solid var(--border); }
-.view-switch button { flex: 1; border: none; background: transparent; color: var(--muted); padding: 14px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; }
+
+/* OPRAVA: Základní reset pro responzivitu */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body { 
+  margin:0; 
+  min-height: 100vh; 
+  background: var(--bg); 
+  color: var(--text); 
+  padding-bottom: 40px; 
+  transition: background 0.4s; 
+  font-size: 16px; /* Optimalizováno pro čitelnost */
+  overflow-x: hidden;
+}
+
+header { 
+  position: sticky; 
+  top: 0; 
+  z-index: 100; 
+  background: var(--header-bg); 
+  backdrop-filter: blur(15px); 
+  border-bottom: 2px solid var(--border); 
+  padding: 12px; 
+}
+
+.brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.brand .title { font-weight: 900; font-size: 18px; color: var(--gold); letter-spacing: 1px; }
+
+.theme-toggle { 
+  background: var(--panel); border: 1.5px solid var(--border); color: var(--text); 
+  padding: 8px 12px; border-radius: 12px; cursor: pointer; font-size: 18px; 
+}
+
+.view-switch { 
+  display: flex; background: var(--panel); border-radius: 12px; padding: 4px; 
+  margin-bottom: 12px; border: 1.5px solid var(--border); 
+}
+.view-switch button { 
+  flex: 1; border: none; background: transparent; color: var(--muted); 
+  padding: 10px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; 
+}
 .view-switch button.active { background: var(--gold); color: #1c2e2e; }
-.person-search { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-.person-box { background: var(--panel); border: 2px solid var(--gold); color: var(--gold); padding: 10px 22px; border-radius: 25px; white-space: nowrap; font-size: 16px; font-weight: 800; cursor: pointer; }
-.controls { display: flex; gap: 10px; margin-top: 10px; }
-.select { background: var(--panel); border: 2px solid var(--border); color: var(--text); padding: 14px; border-radius: 14px; flex: 1; font-size: 18px; font-weight: bold; appearance: none; }
-.btn-nav { background: var(--panel); border: 2px solid var(--border); color: var(--text); padding: 12px 22px; border-radius: 14px; font-weight: 900; font-size: 18px; cursor: pointer; }
-.main-content { padding: 16px; }
+
+.person-search { 
+  display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px 0; 
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.person-box { 
+  background: var(--panel); border: 1.5px solid var(--gold); color: var(--gold); 
+  padding: 6px 16px; border-radius: 20px; white-space: nowrap; font-size: 13px; 
+  font-weight: 800; cursor: pointer; 
+}
+
+.controls { display: flex; gap: 8px; margin-top: 5px; }
+.select { 
+  background: var(--panel); border: 1.5px solid var(--border); color: var(--text); 
+  padding: 10px; border-radius: 10px; flex: 1; font-size: 15px; font-weight: bold; appearance: none; 
+}
+.btn-nav { 
+  background: var(--panel); border: 1.5px solid var(--border); color: var(--text); 
+  padding: 8px 16px; border-radius: 10px; font-weight: 900; font-size: 16px; cursor: pointer; 
+}
+
+.main-content { padding: 12px; width: 100%; max-width: 800px; margin: 0 auto; }
 .view-section { display: none; }
 .view-section.active { display: block; }
-.agenda-title { font-size: 14px; font-weight: 900; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1.5px; }
-.ev-row { background: var(--panel); padding: 16px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; border: 1.5px solid var(--border); border-left: 8px solid transparent; font-size: 18px; font-weight: 600; }
-.month-label { font-size: 32px; font-weight: 900; margin-bottom: 20px; color: var(--gold); }
-.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; background: var(--border); border-radius: 24px; overflow: hidden; border: 2px solid var(--border); }
-.weekday { background: var(--panel); font-size: 13px; color: var(--gold); text-align: center; padding: 15px 0; font-weight: 900; text-transform: uppercase; }
-.day { background: var(--day-bg); min-height: 90px; padding: 10px 5px; position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-.day.today { background: rgba(254, 245, 231, 0.2); box-shadow: inset 0 0 0 3px var(--gold); }
-.day-num { font-weight: 900; font-size: 20px; margin-bottom: 5px; }
-.symbols { display: flex; gap: 3px; width: 90%; height: 12px; justify-content: center; margin-top: auto; padding-bottom: 10px; }
-.symbol-block { flex: 1; height: 100%; border-radius: 4px; max-width: 14px; }
 
-/* FIXOVANÝ GRAF PRO MOBIL */
-.stats-section { margin-top: 30px; background: var(--panel); border-radius: 26px; padding: 20px 10px; border: 2px solid var(--border); overflow: hidden; }
-.stats-bars { display: flex; align-items: flex-end; gap: 3px; height: 140px; margin-top: 15px; border-bottom: 2px solid var(--border); padding-bottom: 25px; justify-content: space-around; }
-.bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; cursor: pointer; min-width: 0; }
-.bar-count { font-size: 11px; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
-.bar-stack { width: 80%; display: flex; flex-direction: column-reverse; border-radius: 4px 4px 0 0; overflow: hidden; min-height: 3px; }
-.segment { width: 100%; }
-.bar-month-box { margin-top: 12px; font-size: 10px; font-weight: 800; color: var(--muted); transform: rotate(-45deg); transform-origin: top center; white-space: nowrap; }
-.bar-container.active .bar-month-box { color: var(--gold); font-weight: 900; text-decoration: underline; }
+.agenda-title { 
+  font-size: 12px; font-weight: 900; color: var(--gold); 
+  text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; 
+}
 
-.sync-zone { margin-top: 20px; display: flex; gap: 10px; }
-.btn-sync { background: var(--border); color: var(--muted); border: 1px solid var(--muted); padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; flex: 1; cursor: pointer; }
+.ev-row { 
+  background: var(--panel); padding: 14px; border-radius: 16px; margin-bottom: 10px; 
+  display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); 
+  border-left: 6px solid transparent; font-size: 15px; font-weight: 600; 
+}
 
-.year-month-card { background: var(--panel); padding: 20px; border-radius: 26px; border: 2px solid var(--border); margin-bottom: 25px; cursor: pointer; }
-.year-event-list { margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--border); font-size: 16px; line-height: 1.8; font-weight: 500; }
+.month-label { font-size: 26px; font-weight: 900; margin-bottom: 16px; color: var(--gold); }
+
+/* RESPONZIVNÍ GRID */
+.month-grid { 
+  display: grid; grid-template-columns: repeat(7, 1fr); 
+  gap: 1px; background: var(--border); border-radius: 16px; 
+  overflow: hidden; border: 1px solid var(--border); 
+}
+.weekday { 
+  background: var(--panel); font-size: 10px; color: var(--gold); 
+  text-align: center; padding: 10px 0; font-weight: 900; text-transform: uppercase; 
+}
+.day { 
+  background: var(--day-bg); min-height: 65px; padding: 6px 2px; 
+  position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; 
+}
+.day.today { background: rgba(254, 245, 231, 0.15); box-shadow: inset 0 0 0 2px var(--gold); }
+.day-num { font-weight: 900; font-size: 16px; margin-bottom: 4px; }
+
+.symbols { 
+  display: flex; gap: 2px; width: 90%; height: 8px; 
+  justify-content: center; margin-top: auto; padding-bottom: 4px; 
+}
+.symbol-block { flex: 1; height: 100%; border-radius: 2px; max-width: 8px; }
+
+/* GRAF - FIXOVANÝ PRO MALÉ DISPLEJE */
+.stats-section { 
+  margin-top: 24px; background: var(--panel); border-radius: 20px; 
+  padding: 16px 8px; border: 1px solid var(--border); overflow: hidden; 
+}
+.stats-bars { 
+  display: flex; align-items: flex-end; gap: 2px; height: 100px; 
+  margin-top: 10px; border-bottom: 1px solid var(--border); padding-bottom: 20px; 
+  justify-content: space-around; 
+}
+.bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+.bar-stack { width: 60%; display: flex; flex-direction: column-reverse; border-radius: 2px 2px 0 0; overflow: hidden; min-height: 2px; }
+.bar-month-box { 
+  position: absolute; bottom: -18px; font-size: 8px; font-weight: 800; 
+  color: var(--muted); transform: rotate(-45deg); white-space: nowrap; 
+}
+
+.sync-zone { margin-top: 24px; display: flex; gap: 8px; }
+.btn-sync { 
+  background: var(--border); color: var(--muted); border: 1px solid var(--muted); 
+  padding: 10px; border-radius: 10px; font-size: 11px; font-weight: bold; flex: 1; 
+}
+
+.year-month-card { background: var(--panel); padding: 16px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 16px; }
+.year-event-list { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 14px; line-height: 1.6; }
+
+/* MODAL - RESPONZIVNÍ VÝŠKA */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: flex-end; }
 .modal-bg.show { display: flex; }
-.modal { background: var(--panel); width: 100%; border-radius: 40px 40px 0 0; padding: 30px; box-sizing: border-box; border-top: 6px solid var(--gold); max-height: 92vh; overflow-y: auto; color: var(--text); }
-.modal h3 { font-size: 26px; font-weight: 900; }
-.modal input, .modal select { width: 100%; margin-bottom: 15px; padding: 18px; border-radius: 16px; background: var(--bg); border: 2px solid var(--border); color: var(--text); font-size: 18px; font-weight: bold; box-sizing: border-box; }
-.btn-export { background: #4a90e2; color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 16px; margin-top: 8px; width: 100%; cursor: pointer; }
+.modal { 
+  background: var(--panel); width: 100%; border-radius: 30px 30px 0 0; 
+  padding: 24px; box-sizing: border-box; border-top: 5px solid var(--gold); 
+  max-height: 85vh; overflow-y: auto; color: var(--text); 
+}
+.modal h3 { font-size: 20px; font-weight: 900; margin: 0 0 16px 0; }
+.modal input, .modal select { 
+  width: 100%; margin-bottom: 12px; padding: 14px; border-radius: 12px; 
+  background: var(--bg); border: 1.5px solid var(--border); color: var(--text); 
+  font-size: 16px; font-weight: bold; 
+}
+.btn-export { background: #4a90e2; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 14px; margin-top: 8px; width: 100%; }
 </style>
 </head>
 <body data-theme="dark">
 <header>
   <div class="brand"><div class="title">FAMILY CALENDAR</div>
-    <div style="display:flex; gap:12px;"><button class="theme-toggle" id="themeToggle">🌓</button><button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#1c2e2e; border:none;">DNES</button></div>
+    <div style="display:flex; gap:10px;"><button class="theme-toggle" id="themeToggle">🌓</button><button class="btn-nav" id="todayBtn" style="background:var(--gold); color:#1c2e2e; border:none; padding: 8px 12px; font-size: 14px;">DNES</button></div>
   </div>
   <div class="view-switch"><button id="btnMonthView" class="active">MĚSÍC</button><button id="btnYearView">ROK</button></div>
   <div class="person-search" id="personSearch"></div>
@@ -88,20 +184,20 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
       <div class="agenda-title">Počty událostí v měsících:</div>
       <div class="stats-bars" id="statsBars"></div>
       <div class="sync-zone">
-        <button class="btn-sync" onclick="exportData()">📤 EXPORTOVAT DATA</button>
-        <button class="btn-sync" onclick="importData()">📥 IMPORTOVAT DATA</button>
+        <button class="btn-sync" onclick="exportData()">📤 EXPORT</button>
+        <button class="btn-sync" onclick="importData()">📥 IMPORT</button>
       </div>
     </div>
   </section>
   <section id="yearSection" class="view-section"><div id="yearScrollList"></div></section>
 </main>
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this) closeModal()">
-  <div class="modal"><h3 id="modalTitle" style="color:var(--gold); margin-top:0;">Detail dne</h3><div id="eventList"></div>
+  <div class="modal"><h3 id="modalTitle" style="color:var(--gold);">Detail dne</h3><div id="eventList"></div>
     <div id="editForm"><input type="text" id="addName" placeholder="Jméno">
-      <div style="display:flex; gap:12px;"><select id="addType" style="flex:2"><option value="bday">🎂 Narozeniny</option><option value="nameday">🌸 Svátek</option><option value="anniv">💍 Výročí</option></select>
-      <input type="number" id="addYear" placeholder="Rok narození" style="flex:1"></div>
-      <button class="btn-nav" style="width:100%; padding:22px; background:var(--gold); color:#1c2e2e; border:none; border-radius:18px; font-weight:900; font-size:20px;" id="saveBtn">ULOŽIT OSLAVU</button>
-    </div><button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:25px; font-weight:900; font-size:18px;">ZAVŘÍT</button>
+      <div style="display:flex; gap:10px;"><select id="addType" style="flex:2"><option value="bday">🎂 Narozeniny</option><option value="nameday">🌸 Svátek</option><option value="anniv">💍 Výročí</option></select>
+      <input type="number" id="addYear" placeholder="Rok" style="flex:1"></div>
+      <button class="btn-nav" style="width:100%; padding:18px; background:var(--gold); color:#1c2e2e; border:none; border-radius:14px; font-weight:900; font-size:18px;" id="saveBtn">ULOŽIT OSLAVU</button>
+    </div><button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--muted); margin-top:20px; font-weight:900; font-size:16px;">ZAVŘÍT</button>
   </div>
 </div>
 <script>
@@ -130,20 +226,18 @@ function init() {
 
 function exportData() {
     const dataStr = btoa(unescape(encodeURIComponent(JSON.stringify(events))));
-    // Nové řešení: Ukáže kód v okně, aby ho mohl uživatel označit
-    prompt("Tvůj kód pro přenos (označ ho a zkopíruj Ctrl+C):", dataStr);
+    prompt("Kód pro přenos:", dataStr);
 }
 
 function importData() {
-    const code = prompt("Vložte exportovaný kód dat:");
+    const code = prompt("Vložte kód:");
     if (code) {
         try {
             const decoded = JSON.parse(decodeURIComponent(escape(atob(code))));
-            if (confirm("Importem přepíšete všechna data v tomto zařízení. Pokračovat?")) {
+            if (confirm("Importovat data?")) {
                 events = decoded;
                 localStorage.setItem(DB_KEY, JSON.stringify(events));
                 render();
-                alert("Hotovo! Data byla přesypána.");
             }
         } catch(e) { alert("Chyba: Neplatný kód."); }
     }
@@ -157,7 +251,7 @@ function openDay(m, d) {
     const list = document.getElementById('eventList'); list.innerHTML = "";
     (events[editKey] || []).forEach((ev, i) => { const age = (ev.type==='bday' && ev.y) ? ` (${curYear - ev.y} let)` : "";
         list.innerHTML += `<div class="ev-row" style="border-left-color:${cats[ev.type].c}; flex-direction:column; align-items:flex-start;">
-            <div style="display:flex; width:100%; justify-content:space-between; align-items:center;"><span style="font-weight:900;">${cats[ev.type].i} ${ev.n}${age}</span><button onclick="delEv('${editKey}',${i})" style="color:#ff5252; background:none; border:none; font-weight:bold; font-size:28px;">×</button></div>
+            <div style="display:flex; width:100%; justify-content:space-between; align-items:center;"><span style="font-weight:900;">${cats[ev.type].i} ${ev.n}${age}</span><button onclick="delEv('${editKey}',${i})" style="color:#ff5252; background:none; border:none; font-weight:bold; font-size:24px;">×</button></div>
             <button class="btn-export" onclick="pushToGoogle('${ev.n}','${ev.type}',${d},${m})">🔔 PŘIDAT DO GOOGLE KALENDÁŘE</button></div>`;
     });
     document.getElementById('modalBg').classList.add('show');
@@ -206,11 +300,10 @@ function render() {
     const max = Math.max(...stats.map(s=>s.total)) || 1;
     document.getElementById('statsBars').innerHTML = stats.map((s,i) => `
         <div class="bar-container ${i===curMonth?'active':''}" onclick="curMonth=${i}; render();">
-            <div class="bar-count">${s.total > 0 ? s.total : ''}</div>
             <div class="bar-stack" style="height:${(s.total/max)*85}%">
-                <div class="segment" style="height:${(s.b/s.total)*100}%; background:var(--clr-bday)"></div>
-                <div class="segment" style="height:${(s.n/s.total)*100}%; background:var(--clr-nameday)"></div>
-                <div class="segment" style="height:${(s.a/s.total)*100}%; background:var(--clr-anniv)"></div>
+                <div class="segment" style="height:${(s.b/(s.total||1))*100}%; background:var(--clr-bday)"></div>
+                <div class="segment" style="height:${(s.n/(s.total||1))*100}%; background:var(--clr-nameday)"></div>
+                <div class="segment" style="height:${(s.a/(s.total||1))*100}%; background:var(--clr-anniv)"></div>
             </div>
             <div class="bar-month-box">${shortMonths[i]}</div>
         </div>`).join('');
@@ -225,12 +318,12 @@ function render() {
         for(let i=0; i<mf; i++) mg += `<div></div>`;
         for(let d=1; d<=md; d++) {
             const k = `${m}-${d}`, has = events[k];
-            mg += `<div style="font-size:11px; padding:3px; ${has?`background:${cats[has[0].type].c}; color:#000; border-radius:4px; font-weight:bold;`:''}">${d}</div>`;
+            mg += `<div style="font-size:9px; padding:2px; ${has?`background:${cats[has[0].type].c}; color:#000; border-radius:4px; font-weight:bold;`:''}">${d}</div>`;
             if(has) has.forEach(e => { const age = (e.type==='bday' && e.y) ? ` (${curYear-e.y} let)` : ""; mEvents += `<div><b>${d}.</b> ${cats[e.type].i} ${e.n}${age}</div>`; });
         }
         yl.innerHTML += `<div class="year-month-card" onclick="curMonth=${m}; switchView('month'); render();">
-            <div style="font-weight:900; color:var(--gold); font-size:22px; border-bottom:2px solid var(--border); padding-bottom:8px; margin-bottom:12px; display:flex; justify-content:space-between;"><span>${months[m]}</span><span style="opacity:0.5">${stats[m].total}x</span></div>
-            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center; margin-bottom:15px;">${mg}</div>
+            <div style="font-weight:900; color:var(--gold); font-size:18px; border-bottom:1px solid var(--border); padding-bottom:8px; margin-bottom:12px; display:flex; justify-content:space-between;"><span>${months[m]}</span><span style="opacity:0.5">${stats[m].total}x</span></div>
+            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:1px; text-align:center; margin-bottom:12px;">${mg}</div>
             <div class="year-event-list">${mEvents || "<span style='opacity:0.3'>Prázdno</span>"}</div>
         </div>`;
     }

@@ -45,7 +45,7 @@ header { position: sticky; top: 0; z-index: 100; background: var(--header-bg); b
 .symbols { display: flex; gap: 3px; width: 90%; height: 12px; justify-content: center; margin-top: auto; padding-bottom: 10px; }
 .symbol-block { flex: 1; height: 100%; border-radius: 4px; max-width: 14px; }
 
-/* GRAF S FIXNÍM ÚHLEM */
+/* FIXOVANÝ GRAF PRO MOBIL */
 .stats-section { margin-top: 30px; background: var(--panel); border-radius: 26px; padding: 20px 10px; border: 2px solid var(--border); overflow: hidden; }
 .stats-bars { display: flex; align-items: flex-end; gap: 3px; height: 140px; margin-top: 15px; border-bottom: 2px solid var(--border); padding-bottom: 25px; justify-content: space-around; }
 .bar-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; cursor: pointer; min-width: 0; }
@@ -130,7 +130,8 @@ function init() {
 
 function exportData() {
     const dataStr = btoa(unescape(encodeURIComponent(JSON.stringify(events))));
-    navigator.clipboard.writeText(dataStr).then(() => alert("Kód dat byl zkopírován do schránky! Pošli si ho do jiného zařízení a tam dej Import."));
+    // Nové řešení: Ukáže kód v okně, aby ho mohl uživatel označit
+    prompt("Tvůj kód pro přenos (označ ho a zkopíruj Ctrl+C):", dataStr);
 }
 
 function importData() {
@@ -138,13 +139,13 @@ function importData() {
     if (code) {
         try {
             const decoded = JSON.parse(decodeURIComponent(escape(atob(code))));
-            if (confirm("Importem přepíšete všechna stávající data v tomto zařízení. Pokračovat?")) {
+            if (confirm("Importem přepíšete všechna data v tomto zařízení. Pokračovat?")) {
                 events = decoded;
                 localStorage.setItem(DB_KEY, JSON.stringify(events));
                 render();
-                alert("Data byla úspěšně přesypána!");
+                alert("Hotovo! Data byla přesypána.");
             }
-        } catch(e) { alert("Chyba: Neplatný kód dat."); }
+        } catch(e) { alert("Chyba: Neplatný kód."); }
     }
 }
 
